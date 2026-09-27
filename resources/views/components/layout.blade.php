@@ -22,7 +22,7 @@
     {{-- end of claude --}}
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="d-flex gap-2 ms-auto">
-        <a href="#" class="btn btn-outline-secondary btn-sm">Sign In</a>
+        <a href="/login" class="btn btn-outline-secondary btn-sm">Sign In</a>
         <a href="#" class="btn btn-primary btn-sm">Sign Up</a>
       </div>
     </div>
@@ -34,9 +34,9 @@
         {{ $slot }}
     </main>
 
-    <footer class="footer footer-center p-5 bg-base-300 text-base-content text-xs">
+     <footer class="text-center py-4 bg-light small">
         <div>
-            <p>© {{ date('Y') }} Calendar </p>
+            <p>© 2026 Calendar App</p>
         </div>
     </footer>
 </body>

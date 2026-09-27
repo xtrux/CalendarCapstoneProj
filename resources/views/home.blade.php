@@ -1,4 +1,14 @@
-<!DOCTYPE html>
+<x-layout title="Main Page">
+    <div class="card shadow mt-4">
+        <div class="card-body">
+            <div>
+                <h1 class="display-6 fw-bold">Calendar App</h1>
+                <p class="mt-4 text-muted">This is main page.</p>
+            </div>
+        </div>
+    </div>
+</x-layout>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -13,19 +23,17 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-
-
+    
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Calendar App</a>
-    {{-- i had claude code write this button  --}}
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
-    {{-- end of claude --}}
+    
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="d-flex gap-2 ms-auto">
-        <a href="#" class="btn btn-outline-secondary btn-sm">Sign In</a>
+        <a href="/login" class="btn btn-outline-secondary btn-sm">Sign In</a>
         <a href="#" class="btn btn-primary btn-sm">Sign Up</a>
       </div>
     </div>
@@ -54,4 +62,4 @@
     </footer>
 </body>
 
-</html>
+</html> --}}
