@@ -24,7 +24,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <div class="d-flex gap-2 ms-auto">
         <a href="/login" class="btn btn-outline-secondary btn-sm">Sign In</a>
-        <a href="#" class="btn btn-primary btn-sm">Sign Up</a>
+        <a href="/register" class="btn btn-primary btn-sm">Sign Up</a>
       </div>
     </div>
   </div>
