@@ -12,6 +12,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+   @unless(isset($hideNav))
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Calendar App</a>
@@ -28,16 +29,17 @@
     </div>
   </div>
 </nav>
+    @endunless
 
-
-    <main class="flex-1 container mx-auto px-4 py-8">
+    <main class="">
         {{ $slot }}
     </main>
-
+    @unless(isset($hideFooter))
      <footer class="text-center py-4 bg-light small">
         <div>
             <p>© 2026 Calendar App</p>
         </div>
     </footer>
+        @endunless
 </body>
 </html>
