@@ -18,6 +18,23 @@ class RegistrationTest extends TestCase
         'password_confirmation' => 'Password123',]);
         $response->assertSessionHasErrors('username');
 }
+public function test_registration_fails_with_duplicate_email(){
+    User::factory()->create(['email' => 'test@test.com']);
+    $response = $this->post('/register',[
+        'username' => 'xtrux',
+        'email' => 'test@test.com',
+        'password' => 'Password123',
+        'password_confirmation' => 'Password123',]);
+        $response->assertSessionHasErrors('email');
+}
+public function test_email_is_proper_format(){
+    $response = $this->post('/register',[
+        'username' => 'xtrux',
+        'email' => 'test',
+        'password' => 'Password123',
+        'password_confirmation' => 'Password123',]);
+        $response->assertSessionHasErrors('email');
+}
     public function test_pw_length(){
     $response = $this->post('/register',[
         'username' => 'xtrux',
@@ -51,9 +68,9 @@ class RegistrationTest extends TestCase
         'password_confirmation' => 'Password123',]);
         $user = User::where('username','xtrux')->first();
         $this->assertNotEquals('Password123',$user->password);
-        $this->AssertTrue(Hash::check('Password123', $user->password));
+        $this->assertTrue(Hash::check('Password123', $user->password));
     }
-    
+     
 
 }   
 
