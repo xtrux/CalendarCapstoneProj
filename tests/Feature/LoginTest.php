@@ -26,4 +26,18 @@ class LoginTest extends TestCase
     $this->assertNotNull($user->locked_until);
     $response->assertSessionHasErrors('locked_until');
     }
+    public function test_correct_password(){
+        $user = User::factory()->create(['email' => 'test@test.com','password' => 'Password123']);
+        $response = $this->post('/login',[
+        'email' => 'test@test.com',
+        'password' => 'Password123']);
+        $response->assertSessionHasNoErrors('password');
+    }
+        public function test_wrong_password(){
+        $user = User::factory()->create(['email' => 'test@test.com','password' => 'Password123']);
+        $response = $this->post('/login',[
+        'email' => 'test@test.com',
+        'password' => 'Password12']);
+        $response->assertSessionHasErrors('password');
+    }
 }
