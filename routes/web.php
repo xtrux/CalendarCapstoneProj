@@ -15,4 +15,5 @@ Route::post('/login', function () {
 Route::get('/register', function () {
     return view('register');
 });
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
