@@ -13,28 +13,34 @@
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control bg-light border-0" id="username" name="username"
+                        <input type="text" class="form-control bg-light border-0  @error('email') is-invalid @enderror" id="username" name="username"
                             placeholder="Enter your Username" required>
                     </div>
-
+                    @error('username')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control bg-light border-0" id="email" name="email"
-                            placeholder="Enter your email" required>
+                        <input type="email" class="form-control bg-light border-0 @error('email') is-invalid @enderror" id="email" name="email"
+                            placeholder="Enter your email" value="{{ old('email') }} required>
                     </div>
-
+                    @error('email')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                     <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control bg-light border-0" id="password" name="password"
+                        <input type="password" class="form-control bg-light border-0 @error('password') is-invalid @enderror" id="password" name="password"
                             placeholder="Enter your password" required>
                     </div>
-
+                    @error('password')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                     <div class="mb-2">
-                        <label for="password_confirmation" class="form-label">Password</label>
-                        <input type="password" class="form-control bg-light border-0" id="password_confirmation" name="password_confirmation"
-                            placeholder="Enter your password again" required>
+                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control bg-light border-0 @error('password') is-invalid @enderror" id="password_confirmation"
+                            name="password_confirmation" placeholder="Enter your password again" required>
                     </div>
-                   
+
                     <button type="submit" class="btn btn-dark w-100 rounded-pill py-2">Register</button>
 
                     <p class="text-center small mt-3 mb-0">
