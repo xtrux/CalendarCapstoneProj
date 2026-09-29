@@ -3,6 +3,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 
 class RegistrationTest extends TestCase
 {
@@ -25,7 +26,34 @@ class RegistrationTest extends TestCase
         'password_confirmation' => 'Password123',]);
         $response->assertSessionHasErrors('password');
     }
+    public function test_pw_uppercase(){
+    $response = $this->post('/register',[
+        'username' => 'xtrux',
+        'email' => 'test@test.com',
+        'password' => 'password123',
+        'password_confirmation' => 'Password123',]);
+        $response->assertSessionHasErrors('password');
+    }
+    
+    public function test_password_requirements(){
+    $response = $this->post('/register',[
+        'username' => 'xtrux',
+        'email' => 'test@test.com',
+        'password' => 'Password123',
+        'password_confirmation' => 'Password123',]);
+        $response->assertSessionHasNoErrors();
+    }
+    public function test_password_is_hashed(){
+    $response = $this->post('/register',[
+        'username' => 'xtrux',
+        'email' => 'test@test.com',
+        'password' => 'Password123',
+        'password_confirmation' => 'Password123',]);
+        $user = User::where('username','xtrux')->first();
+        $this->assertNotEquals('Password123',$user->password);
+        $this->AssertTrue(Hash::check('Password123', $user->password));
+    }
+    
 
-
-}
+}   
 
