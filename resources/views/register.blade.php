@@ -22,7 +22,7 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" class="form-control bg-light border-0 @error('email') is-invalid @enderror" id="email" name="email"
-                            placeholder="Enter your email" value="{{ old('email') }} required>
+                            placeholder="Enter your email" value="{{ old('email') }}" required>
                     </div>
                     @error('email')
                         <div class="text-danger small mt-1">{{ $message }}</div>

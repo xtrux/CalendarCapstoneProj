@@ -69,4 +69,10 @@ class AuthController extends Controller
             return back()->withErrors(['password' => 'invalid email or passsword']);
         }
     }
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
 }

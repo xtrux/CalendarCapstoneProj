@@ -13,7 +13,7 @@
 
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control bg-light border-0" id="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" required>
+                        <input type="email" class="form-control bg-light border-0" id="email" name="email" value="{{ old('email') }} placeholder="Enter your email" required>
                     </div>
 
                     <div class="mb-2">
