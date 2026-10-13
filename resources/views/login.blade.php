@@ -15,12 +15,16 @@
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" class="form-control bg-light border-0" id="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" required>
                     </div>
-
+                    @error('email')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                     <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control bg-light border-0" id="password" name="password" placeholder="Enter your password" required>
                     </div>
-
+                    @error('password')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                     <div class="text-end mb-3">
                         <a href="#" class="small text-decoration-none">Forgot password?</a>
                     </div>
