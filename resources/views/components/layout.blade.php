@@ -15,9 +15,9 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-80">
   @unless(isset($hideNav))
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Calendar App</a>
         {{-- i had claude code write this button --}}
@@ -28,10 +28,11 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <div class="d-flex gap-2 ms-auto">
             @auth
-                    <form action="/logout" method="POST" class="d-inline">
+              <form action="/logout" method="POST" class="d-inline">
               @csrf
               <button type="submit" class="btn btn-outline-secondary btn-sm">Log Out</button>
               </form>
+              <a href="/settings" class="btn btn-primary btn-sm">Settings</a>
             @else
               <a href="/login" class="btn btn-outline-secondary btn-sm">Sign In</a>
               <a href="/register" class="btn btn-primary btn-sm">Sign Up</a>
