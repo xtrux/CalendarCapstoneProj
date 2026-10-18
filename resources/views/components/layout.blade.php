@@ -15,8 +15,8 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="d-flex flex-column min-vh-80">
-  @unless(isset($hideNav))
+<body class="d-flex flex-column min-vh-80" style="padding-top: 56px;">
+    @unless(isset($hideNav))
     <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Calendar App</a>

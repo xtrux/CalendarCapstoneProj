@@ -1,4 +1,4 @@
-<x-layout title="Settings"  hide-footer="true">
+<x-layout title="Settings" hide-footer="true">
     <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient  p-4"
         style="min-height: 100vh;">
         <h2 class="fw-bold text-center text-dark mb-4">Welcome {{auth()->user()->username}}</h2>
@@ -14,7 +14,7 @@
                     <div class="mb-3">
                         <label for="username" class="form-label">Change Username</label>
                         <div class="d-flex gap-2">
-                            <input type="text" class="form-control bg-light border-0" id="text" name="text"
+                            <input type="text" class="form-control bg-light border-0" id="username" name="username"
                                 placeholder="your new username" required>
                             <button type="submit" class="btn btn-dark  rounded-pill py-2">Update</button>
                         </div>
@@ -38,22 +38,21 @@
                     <div class="mb-3 gap-3">
                         <label for="oldPass" class="form-label">Change Password</label>
                         <div class="mb-3">
-                            <input type="password" class="form-control bg-light border-0" id="oldPass" name="text"
+                            <input type="password" class="form-control bg-light border-0" id="oldPass" name="oldPass"
                                 placeholder="old password" required>
                         </div>
                         <div class="mb-3">
 
-
-
                             <input type="password" class="form-control bg-light border-0" id="newPass" name="newPass"
                                 placeholder="new password" required>
+                             @error('newPass')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                             @enderror
                         </div>
                         <div class="mb-3">
 
-
-
-                            <input type="password" class="form-control bg-light border-0" id="confirmPass"
-                                name="confirmPass" placeholder="confirm new password" required>
+                            <input type="password" class="form-control bg-light border-0" id="newPass_confirmation"
+                                name="newPass_confirmation" placeholder="confirm new password" required>
                         </div>
                         <button type="submit" class="btn btn-dark w-100  rounded-pill py-2">Update</button>
 

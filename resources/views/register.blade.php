@@ -13,7 +13,7 @@
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control bg-light border-0  @error('email') is-invalid @enderror" id="username" name="username"
+                        <input type="text" class="form-control bg-light border-0  @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}"
                             placeholder="Enter your Username" required>
                     </div>
                     @error('username')
