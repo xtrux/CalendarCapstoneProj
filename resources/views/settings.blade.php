@@ -40,14 +40,17 @@
                         <div class="mb-3">
                             <input type="password" class="form-control bg-light border-0" id="oldPass" name="oldPass"
                                 placeholder="old password" required>
+                                @error('password')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                         </div>
                         <div class="mb-3">
 
                             <input type="password" class="form-control bg-light border-0" id="newPass" name="newPass"
                                 placeholder="new password" required>
-                             @error('newPass')
-                        <div class="text-danger small mt-1">{{ $message }}</div>
-                             @enderror
+                                @error('newPass')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                 @enderror
                         </div>
                         <div class="mb-3">
 

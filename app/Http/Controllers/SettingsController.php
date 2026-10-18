@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -20,6 +22,19 @@ class SettingsController extends Controller
         ]);
         return redirect('/settings')->with('success', 'Username updated!');
     }
+    public function changeEmail(Request $request)
+    {   
+        $user = auth()->user();
+        $validated = $request->validate([
+            'email' => "required|string|email|max:255|unique:users,email,{$user->id}",
+            
+        ]);
+        $user->update([
+            'email' => $validated['email'],
+            
+        ]);
+        return redirect('/settings')->with('success', 'email updated!');
+    }
 
     public function changePassword(Request $request)
     {
@@ -36,7 +51,8 @@ class SettingsController extends Controller
 
             ]);
         }else{
-            return back()->withErrors(['password' => 'old password is invalid']);
+                // dd('wrong password branch reached');
+            return back()->withErrors(['password' => 'Old Password is Incorrect']);
         }
         
         return redirect('/settings')->with('success', 'Password updated!');
