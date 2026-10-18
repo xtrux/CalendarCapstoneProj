@@ -57,6 +57,12 @@ class SettingsController extends Controller
         
         return redirect('/settings')->with('success', 'Password updated!');
     }
-
+    public function changeProfilePicture(Request $request){
+        $user = auth()->user();
+        $validated = $request->validate([
+            'profile_picture' => "required|image|mimes:jpg,jpeg,png,webp|max:2048",
+        ]);
+    }
+    
 
 }

@@ -21,6 +21,9 @@ Route::get('/settings', function () {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
+
+
 Route::post('/changeUsername', [SettingsController::class, 'changeUsername']);
 Route::post('/changePassword', [SettingsController::class, 'changePassword']);
 Route::post('/changeEmail',    [SettingsController::class, 'changeEmail']);
+Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
