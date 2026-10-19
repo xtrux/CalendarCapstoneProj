@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -35,7 +36,22 @@ class SettingsController extends Controller
         ]);
         return redirect('/settings')->with('success', 'email updated!');
     }
+    public function deleteUser(Request $request){
+        $user = auth()->user();
+        $credentials = $request->validate([
+            'password' => 'required',
+        ]);
+        if(Hash::check($credentials['password'],$user->password)){
+            Auth::logout();
+            $user->delete();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect('/')->with('success', 'Your account has been deleted.');
 
+        }else{
+            return back()->withErrors(['password' => 'Password is Incorrect']); 
+        }
+    }
     public function changePassword(Request $request)
     {
         $user = auth()->user();
@@ -57,6 +73,7 @@ class SettingsController extends Controller
         
         return redirect('/settings')->with('success', 'Password updated!');
     }
+    // to finish
     public function changeProfilePicture(Request $request){
         $user = auth()->user();
         $validated = $request->validate([

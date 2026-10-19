@@ -27,3 +27,4 @@ Route::post('/changeUsername', [SettingsController::class, 'changeUsername']);
 Route::post('/changePassword', [SettingsController::class, 'changePassword']);
 Route::post('/changeEmail',    [SettingsController::class, 'changeEmail']);
 Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
+Route::post('/deleteUser', [SettingsController::class, 'deleteUser']);
