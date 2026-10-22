@@ -62,7 +62,22 @@
                         <hr>
                     </div>
                 </form>
+                <form action="/deleteAccount" method="POST">
+                    @csrf
+                    <div class="mb-3 gap-3">
+                        <label for="password" class="form-label">Delete Account Password</label>
+                        <div class="mb-3">
+                            <input type="password" class="form-control bg-light border-0" id="password" name="password"
+                                placeholder="old password" required>
+                                @error('password')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100  rounded-pill py-2">Delete</button>
 
+                        <hr>
+                    </div>
+                </form>
 
 
 
