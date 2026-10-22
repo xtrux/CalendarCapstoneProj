@@ -10,7 +10,8 @@ Route::get('/', function () {
 });
 Route::get('/login', function () {
     return view('login');
-});
+})->name('login');
+
 
 Route::get('/register', function () {
     return view('register');
