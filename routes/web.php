@@ -23,8 +23,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 
+Route::middleware('auth')->group(function () {
+    Route::get('/settings', function () {
+        return view('settings');
+    });
 Route::post('/changeUsername', [SettingsController::class, 'changeUsername']);
 Route::post('/changePassword', [SettingsController::class, 'changePassword']);
 Route::post('/changeEmail',    [SettingsController::class, 'changeEmail']);
 Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
 Route::post('/deleteUser', [SettingsController::class, 'deleteUser']);
+});
