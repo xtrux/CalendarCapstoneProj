@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
-    public function changeUsername(Request $request)
+    public function changeUsername(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $validated = $request->validate([
@@ -23,7 +24,7 @@ class SettingsController extends Controller
         return redirect('/settings')->with('success', 'Username updated!');
     }
 
-    public function changeEmail(Request $request)
+    public function changeEmail(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $validated = $request->validate([
@@ -38,7 +39,7 @@ class SettingsController extends Controller
         return redirect('/settings')->with('success', 'email updated!');
     }
 
-    public function deleteUser(Request $request)
+    public function deleteUser(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $credentials = $request->validate([
@@ -51,13 +52,12 @@ class SettingsController extends Controller
             $request->session()->regenerateToken();
 
             return redirect('/')->with('success', 'Your account has been deleted.');
-
         } else {
             return back()->withErrors(['password' => 'Password is Incorrect']);
         }
     }
 
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $validated = $request->validate([
@@ -80,11 +80,13 @@ class SettingsController extends Controller
     }
 
     // to finish
-    public function changeProfilePicture(Request $request)
+    public function changeProfilePicture(Request $request): RedirectResponse
     {
         $user = auth()->user();
         $validated = $request->validate([
             'profile_picture' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        return redirect('/settings')->with('success', 'Profile Picture Updated!');
     }
 }

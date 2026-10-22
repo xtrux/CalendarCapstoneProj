@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'username' => 'required|string|unique:users,username',
@@ -27,7 +28,7 @@ class AuthController extends Controller
         return redirect('/login')->with('success', 'Account created! Please log in.');
     }
 
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
 
         $credentials = $request->validate([
@@ -70,7 +71,7 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
         $request->session()->invalidate();
