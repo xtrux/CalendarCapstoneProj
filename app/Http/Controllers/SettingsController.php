@@ -2,56 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
     public function changeUsername(Request $request)
-    {   
+    {
         $user = auth()->user();
         $validated = $request->validate([
             'username' => "required|string|unique:users,username,{$user->id}",
-            
+
         ]);
         $user->update([
             'username' => $validated['username'],
-            
+
         ]);
+
         return redirect('/settings')->with('success', 'Username updated!');
     }
+
     public function changeEmail(Request $request)
-    {   
+    {
         $user = auth()->user();
         $validated = $request->validate([
             'email' => "required|string|email|max:255|unique:users,email,{$user->id}",
-            
+
         ]);
         $user->update([
             'email' => $validated['email'],
-            
+
         ]);
+
         return redirect('/settings')->with('success', 'email updated!');
     }
-    public function deleteUser(Request $request){
+
+    public function deleteUser(Request $request)
+    {
         $user = auth()->user();
         $credentials = $request->validate([
             'password' => 'required',
         ]);
-        if(Hash::check($credentials['password'],$user->password)){
+        if (Hash::check($credentials['password'], $user->password)) {
             Auth::logout();
             $user->delete();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return redirect('/')->with('success', 'Your account has been deleted.');
 
-        }else{
-            return back()->withErrors(['password' => 'Password is Incorrect']); 
+        } else {
+            return back()->withErrors(['password' => 'Password is Incorrect']);
         }
     }
+
     public function changePassword(Request $request)
     {
         $user = auth()->user();
@@ -66,20 +71,20 @@ class SettingsController extends Controller
                 'password' => $validated['newPass'],
 
             ]);
-        }else{
-                // dd('wrong password branch reached');
+        } else {
+            // dd('wrong password branch reached');
             return back()->withErrors(['password' => 'Old Password is Incorrect']);
         }
-        
+
         return redirect('/settings')->with('success', 'Password updated!');
     }
+
     // to finish
-    public function changeProfilePicture(Request $request){
+    public function changeProfilePicture(Request $request)
+    {
         $user = auth()->user();
         $validated = $request->validate([
-            'profile_picture' => "required|image|mimes:jpg,jpeg,png,webp|max:2048",
+            'profile_picture' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
     }
-    
-
 }

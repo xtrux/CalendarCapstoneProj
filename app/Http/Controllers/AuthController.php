@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -19,14 +19,13 @@ class AuthController extends Controller
         User::create([
             'username' => $validated['username'],
             'email' => $validated['email'],
-            // laravel hashes it automatically with the user model 
+            // laravel hashes it automatically with the user model
             'password' => $validated['password'],
 
         ]);
+
         return redirect('/login')->with('success', 'Account created! Please log in.');
     }
-
-
 
     public function login(Request $request)
     {
@@ -66,13 +65,17 @@ class AuthController extends Controller
                 $user->locked_until = now()->addMinutes(60);
             }
             $user->save();
+
             return back()->withErrors(['password' => 'invalid email or passsword']);
         }
     }
-    public function logout(Request $request){
+
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     }
 }

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SettingsController;
-
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,7 +10,6 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login');
 })->name('login');
-
 
 Route::get('/register', function () {
     return view('register');
@@ -23,14 +21,13 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/settings', function () {
         return view('settings');
     });
-Route::post('/changeUsername', [SettingsController::class, 'changeUsername']);
-Route::post('/changePassword', [SettingsController::class, 'changePassword']);
-Route::post('/changeEmail',    [SettingsController::class, 'changeEmail']);
-Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
-Route::post('/deleteUser', [SettingsController::class, 'deleteUser']);
+    Route::post('/changeUsername', [SettingsController::class, 'changeUsername']);
+    Route::post('/changePassword', [SettingsController::class, 'changePassword']);
+    Route::post('/changeEmail', [SettingsController::class, 'changeEmail']);
+    Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
+    Route::post('/deleteUser', [SettingsController::class, 'deleteUser']);
 });
