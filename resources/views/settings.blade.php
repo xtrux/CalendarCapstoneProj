@@ -62,7 +62,7 @@
                         <hr>
                     </div>
                 </form>
-                <form action="/deleteAccount" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+                <form action="/deleteUser" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
                     @csrf
                     <div class="mb-3 gap-3">
                         <label for="password" class="form-label">Delete Account Password</label>
