@@ -24,7 +24,7 @@ use Illuminate\Support\Str;
  * @property Carbon|null $updated_at
  * @property Carbon| CarbonImmutable|null $locked_until
  */
-#[Fillable(['username', 'email', 'password'])]
+#[Fillable(['username', 'email', 'password','profile_picture'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
