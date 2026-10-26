@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Str;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,8 +89,16 @@ class SettingsController extends Controller
         if ($user->profile_picture) {
             Storage::disk('public')->delete($user->profile_picture);
         }
-        $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-        $user->update(['profile_picture' => $path,]);
+         $file = $request->file('profile_picture');
+    $filename = Str::random(40) . '.' . $file->extension();
+    $path = 'profile_pictures/' . $filename;
+
+    Storage::disk('public')->put($path, file_get_contents($file->getPathname()));
+
+    $user->update(['profile_picture' => $path]);
+
+        
+
 
         return redirect('/settings')->with('success', 'Profile Picture Updated!');
     }
