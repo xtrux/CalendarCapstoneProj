@@ -16,7 +16,7 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
-    @unless(isset($hideNav))
+  @unless(isset($hideNav))
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Calendar App</a>
@@ -24,13 +24,28 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
         </button>
+
         {{-- end of claude --}}
+        @auth
+          @if ($user->profile_picture ?? auth()->user()->profile_picture)
+            <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile picture"
+              class="rounded-circle mb-2" style="width: 50px; height: 50px; object-fit: cover;">
+          @else
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-2"
+              style="width: 50px; height: 50px; color: white; font-size: 2rem;">
+              {{ auth()->user()->initials() }}
+            </div>
+          @endif
+        @endauth
+
+
         <div class="collapse navbar-collapse" id="navbarNav">
           <div class="d-flex gap-2 ms-auto">
             @auth
+
               <form action="/logout" method="POST" class="d-inline">
-              @csrf
-              <button type="submit" class="btn btn-outline-secondary btn-sm">Log Out</button>
+                @csrf
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Log Out</button>
               </form>
               <a href="/settings" class="btn btn-primary btn-sm">Settings</a>
             @else
@@ -44,9 +59,9 @@
     </nav>
   @endunless
 
-<main class="flex-grow-1 d-flex flex-column">
+  <main class="flex-grow-1 d-flex flex-column">
     {{ $slot }}
-</main>
+  </main>
   @unless(isset($hideFooter))
     <footer class="text-center py-4 bg-light small">
       <div>
