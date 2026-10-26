@@ -13,7 +13,7 @@ describe('Settings', () => {
   });
 
   it('changes the email successfully', () => {
-    cy.registerAndLogin().then(() => {
+    cy.registerAndLogin().then((user) => {
       const newEmail = `changedemail${Date.now()}@example.com`;
       cy.visit('/settings');
       cy.get('#email').clear().type(newEmail);
@@ -21,9 +21,11 @@ describe('Settings', () => {
         .filter((_, form) => form.action.endsWith('/changeEmail'))
         .submit();
 
-      // Confirm it stuck by logging out and back in with the new email.
-      cy.visit('/logout');
-      cy.get('#email').type(newEmail);
+      // Confirm it actually stuck by logging out and back in with the new
+      // email (same password as before, since we only changed the email).
+      cy.logout();
+      cy.loginAs(newEmail, user.password);
+      cy.url().should('eq', Cypress.config().baseUrl + '/');
     });
   });
 
@@ -39,7 +41,7 @@ describe('Settings', () => {
         .submit();
 
       // Log out and confirm the new password actually works.
-      cy.contains('a, button', /log ?out/i).click();
+      cy.logout();
       cy.loginAs(user.email, newPassword);
       cy.url().should('eq', Cypress.config().baseUrl + '/');
     });

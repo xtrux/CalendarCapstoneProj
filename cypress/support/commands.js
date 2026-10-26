@@ -58,3 +58,13 @@ Cypress.Commands.add('registerAndLogin', () => {
     return cy.wrap(user);
   });
 });
+
+/**
+ * /logout is a POST-only route (there's no GET page for it), so cy.visit()
+ * won't work. This submits the actual "Log Out" form in the nav instead.
+ * Only works on a page that renders the nav (i.e. not login/register, which
+ * set hide-nav="true").
+ */
+Cypress.Commands.add('logout', () => {
+  cy.get('form[action="/logout"]').submit();
+});

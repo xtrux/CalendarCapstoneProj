@@ -1,6 +1,7 @@
-
-<x-layout title="Sign In" hide-nav="true" hide-footer="true">
-    <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient  p-4" style="min-height: 100vh;">
+<x-layout title="Sign In" 
+{{-- hide-nav="true"  --}}
+hide-footer="true">
+    <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient p-4 flex-grow-1">
         <h2 class="fw-bold text-center text-dark mb-4">Ready to keep track of time?</h2>
 
         <h3 class="fw-bold text-center text-dark mb-4">Sign in to your account</h3>
@@ -10,17 +11,21 @@
 
                 <form action="/login" method="POST">
                     @csrf
-
+                    @error('locked_until')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control bg-light border-0" id="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" required>
+                        <input type="email" class="form-control bg-light border-0" id="email" name="email"
+                            value="{{ old('email') }}" placeholder="Enter your email" required>
                     </div>
                     @error('email')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                     <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control bg-light border-0" id="password" name="password" placeholder="Enter your password" required>
+                        <input type="password" class="form-control bg-light border-0" id="password" name="password"
+                            placeholder="Enter your password" required>
                     </div>
                     @error('password')
                         <div class="text-danger small mt-1">{{ $message }}</div>

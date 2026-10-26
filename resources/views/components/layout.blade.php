@@ -15,9 +15,9 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="d-flex flex-column min-vh-80" style="padding-top: 56px;">
+<body class="d-flex flex-column min-vh-100">
     @unless(isset($hideNav))
-    <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">Calendar App</a>
         {{-- i had claude code write this button --}}
@@ -44,9 +44,9 @@
     </nav>
   @endunless
 
-  <main class="">
+<main class="flex-grow-1 d-flex flex-column">
     {{ $slot }}
-  </main>
+</main>
   @unless(isset($hideFooter))
     <footer class="text-center py-4 bg-light small">
       <div>

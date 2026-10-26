@@ -11,9 +11,13 @@ describe('Registration', () => {
     cy.get('#password').type('Password123');
     cy.get('#password_confirmation').type('Password123');
     cy.get('form').contains('button', /sign up|register|create/i).click();
-    
+
+    // Note: the app currently sets a session('success') flash message on
+    // registration, but login.blade.php never renders it, so we can't
+    // assert on visible text here. Landing on /login is enough proof the
+    // registration itself succeeded. If you add a success banner to
+    // login.blade.php, add back: cy.contains(/account created/i);
     cy.url().should('include', '/login');
-    // cy.contains(/account created/i);
   });
 
   it('rejects a duplicate username', () => {

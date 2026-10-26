@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('group_id')->constrained('groups');
             $table->foreignId('user_id')->constrained('users');
             $table->date('date');
+            // $table->hour('hour');
             $table->string('status');
             $table->timestamps();
             $table->unique(['user_id', 'group_id', 'date']);

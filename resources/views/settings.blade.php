@@ -3,10 +3,37 @@
         style="min-height: 100vh;">
         <h2 class="fw-bold text-center text-dark mb-4">Welcome {{auth()->user()->username}}</h2>
 
-        <h3 class="fw-bold text-center text-dark mb-4">user icon goes here</h3>
+        @if ($user->profile_picture ?? auth()->user()->profile_picture)
+            <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile picture"
+                class="rounded-circle mb-4" style="width: 100px; height: 100px; object-fit: cover;">
+        @else
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
+                style="width: 100px; height: 100px; color: white; font-size: 2rem;">
+                {{ auth()->user()->initials() }}
+            </div>
+        @endif
 
         <div class="card shadow rounded-4 border-0" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">
+
+                
+                
+
+                <form action="/changeProfilePicture" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="profile_picture" class="form-label">Change Profile Picture</label>
+                        <div class="d-flex gap-2">
+                            <input type="file" class="form-control bg-light border-0" id="profile_picture"
+                                name="profile_picture" accept="image/png, image/jpeg, image/webp" required>
+                            <button type="submit" class="btn btn-dark rounded-pill py-2">Update</button>
+                        </div>
+                        @error('profile_picture')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                        @enderror
+                        <hr>
+                    </div>
+                </form>
 
 
                 <form action="/changeUsername" method="POST">
@@ -40,17 +67,17 @@
                         <div class="mb-3">
                             <input type="password" class="form-control bg-light border-0" id="oldPass" name="oldPass"
                                 placeholder="old password" required>
-                                @error('password')
+                            @error('password')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                            @enderror
                         </div>
                         <div class="mb-3">
 
                             <input type="password" class="form-control bg-light border-0" id="newPass" name="newPass"
                                 placeholder="new password" required>
-                                @error('newPass')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                 @enderror
+                            @error('newPass')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-3">
 
@@ -62,16 +89,17 @@
                         <hr>
                     </div>
                 </form>
-                <form action="/deleteUser" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+                <form action="/deleteUser" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
                     @csrf
                     <div class="mb-3 gap-3">
                         <label for="password" class="form-label">Delete Account Password</label>
                         <div class="mb-3">
                             <input type="password" class="form-control bg-light border-0" id="password" name="password"
                                 placeholder="old password" required>
-                                @error('password')
+                            @error('password')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
+                            @enderror
                         </div>
                         <button type="submit" class="btn btn-danger w-100  rounded-pill py-2">Delete</button>
 

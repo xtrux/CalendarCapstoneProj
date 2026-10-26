@@ -1,9 +1,9 @@
-<x-layout title="Sign Up" hide-nav="true" hide-footer="true">
-    <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient  p-4"
-        style="min-height: 100vh;">
-        <h2 class="fw-bold text-center text-dark mb-4">Ready to keep track of time?</h2>
-
-        <h3 class="fw-bold text-center text-dark mb-4">Sign up for an account</h3>
+<x-layout title="Sign Up" 
+{{-- hide-nav="true" --}}
+ hide-footer="true">
+    <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient p-4 flex-grow-1">
+        <h2 class="fw-bold text-center text-dark mb-2">Ready to keep track of time?</h2>
+<h3 class="fw-bold text-center text-dark mb-3">Sign up for an account</h3>
 
         <div class="card shadow rounded-4 border-0" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">

@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Storage;
 class SettingsController extends Controller
 {
     public function changeUsername(Request $request): RedirectResponse
@@ -86,6 +86,11 @@ class SettingsController extends Controller
         $validated = $request->validate([
             'profile_picture' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+        $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+        $user->update(['profile_picture' => $path,]);
 
         return redirect('/settings')->with('success', 'Profile Picture Updated!');
     }
