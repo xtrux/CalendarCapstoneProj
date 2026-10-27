@@ -33,13 +33,13 @@ class Group extends Model
         return $this->hasMany(GroupMember::class);
     }
 
-    public function events(): HasMany
+    public function event(): HasMany
     {
-        return $this->hasMany(Events::class);
+        return $this->hasMany(Event::class);
     }
 
-    public function availibility(): HasMany
+    public function availability(): HasMany
     {
-        return $this->hasMany(Availibility::class);
+        return $this->hasMany(Availability::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,7 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $description
  * @property Carbon $date
  **/
-class Events extends Model
+#[Fillable(['group_id', 'created_by_user_id', 'name', 'description', 'date'])]
+class Event extends Model
 {
     public function group(): BelongsTo
     {
@@ -24,5 +26,12 @@ class Events extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
     }
 }
