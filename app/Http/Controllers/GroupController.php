@@ -39,7 +39,31 @@ class GroupController extends Controller
 
     public function joinGroup(Request $request): RedirectResponse
     {
-        return redirect('group/{id}');
+        $user = auth()->user();
+        $validated = $request->validate([
+            'invite_code' => 'required|string|min:8|max:8'
+        ]);
+        if(Group::where('invite_code',$validated['invite_code'])->first() !== null){
+            $group = Group::where('invite_code',$validated['invite_code'])->first();
+
+            //prevent joining a group multiple times
+            if($user->id == (GroupMember::where('user_id', $user->id) )  ){
+                            return back()->withErrors('already in group');
+
+            }
+             GroupMember::create([
+                'group_id' => $group->id,
+                'user_id' => $user->id,
+                'role' => 'member',
+            ]);
+        }else{
+            return back()->withErrors('group doesnt exist');
+        }
+
+       
+        
+
+        return redirect('/group/'.$group->id);
     }
 
     public function leaveGroup(Request $request): RedirectResponse
