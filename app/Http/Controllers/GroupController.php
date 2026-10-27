@@ -5,16 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Str;
 
 class GroupController extends Controller
 {
     public function createGroup(Request $request): RedirectResponse
-    {
-        Group::create([
+    {   
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+        ]);
+        $group =Group::create([
+            'name' => $validated['name'],
+            'admin_user_id' => $user->id,
+            'invite_code' => Str::random(8),
 
         ]);
 
-        return redirect('/group/{id}')->with('success', 'group created');
+        return redirect('/group/' . $group->id)->with('success', 'group created');
     }
 
     public function joinGroup(Request $request): RedirectResponse
