@@ -95,8 +95,12 @@ class SettingsController extends Controller
         $filename = Str::random(40).'.'.$file->extension();
         $path = 'profile_pictures/'.$filename;
 
-        Storage::disk('public')->put($path, file_get_contents($file->getPathname()));
-
+        // Storage::disk('public')->put($path, file_get_contents($file->getPathname()));
+        $contents = file_get_contents($file->getPathname());
+        if ($contents === false) {
+            abort(500, 'Could not read uploaded file.');
+        }
+        Storage::disk('public')->put($path, $contents);
         $user->update(['profile_picture' => $path]);
 
         return redirect('/settings')->with('success', 'Profile Picture Updated!');

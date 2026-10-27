@@ -15,11 +15,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['group_id', 'user_id', 'role'])]
 class GroupMember extends Model
 {
+    /**
+     * @return BelongsTo<Group, $this>
+     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

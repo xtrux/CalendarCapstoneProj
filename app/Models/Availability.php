@@ -17,11 +17,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['group_id', 'user_id', 'date', 'status'])]
 class Availability extends Model
 {
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<Group, $this>
+     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);

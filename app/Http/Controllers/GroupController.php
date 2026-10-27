@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -16,13 +17,22 @@ class GroupController extends Controller
         return redirect('/group/{id}')->with('success', 'group created');
     }
 
-    public function joinGroup(Request $request): RedirectResponse {}
+    public function joinGroup(Request $request): RedirectResponse
+    {
+        return redirect('group/{id}');
+    }
 
-    public function leaveGroup(Request $request): ReturnType {}
+    public function leaveGroup(Request $request): RedirectResponse
+    {
+        return redirect('/groups');
+    }
 
-    public function removeUser(): ReturnType {}
+    // public function removeUser(): ReturnType {}
 
-    public function deleteGroup(): ReturnType {}
+    public function deleteGroup(): RedirectResponse
+    {
+        return redirect('/groups');
+    }
 
-    public function regenerateInvite(): ReturnType {}
+    // public function regenerateInvite(): ReturnType {}
 }
