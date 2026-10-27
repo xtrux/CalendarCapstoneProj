@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained('groups');
-            $table->foreignId('created_by_user_id')->constrained('users');
+            $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
+            $table->foreignId('created_by_user_id')->constrained('users')->cascadeOnDelete();
             $table->string('name');
             $table->text('description');
             $table->date('date');

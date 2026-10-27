@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('availability', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained('groups');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->date('date');
             // $table->hour('hour');
             $table->string('status');
