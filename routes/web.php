@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/changeEmail', [SettingsController::class, 'changeEmail']);
     Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
     Route::post('/deleteUser', [SettingsController::class, 'deleteUser']);
+
+
+
+    Route::get('/group/{group}', [GroupController::class, 'show']);
+    Route::post('/group/create',[GroupController::class,'createGroup']);
 });

@@ -45,6 +45,7 @@ class User extends Authenticatable
             'locked_until' => 'datetime',
         ];
     }
+
     /**
      * @return BelongsToMany<Group, $this>
      */
@@ -52,6 +53,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Group::class, 'group_members')->withPivot('role');
     }
+
     /**
      * Get the user's initials
      */
@@ -60,7 +62,7 @@ class User extends Authenticatable
         $initials = Str::initials($this->username, true);
 
         return Str::length($initials) > 1
-            ? Str::substr($initials, 0, 1) . Str::substr($initials, -1)
+            ? Str::substr($initials, 0, 1).Str::substr($initials, -1)
             : $initials;
     }
 }

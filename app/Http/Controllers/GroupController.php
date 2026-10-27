@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\View\View;
 use App\Models\Group;
 use App\Models\GroupMember;
 use DB;
@@ -18,6 +18,28 @@ class GroupController extends Controller
         } while (Group::where('invite_code', $code)->exists());
 
         return $code;
+    }
+    // generated for testing 
+    // i did not write this method at all
+    public function show(Group $group): View
+    {
+        $user = auth()->user();
+
+        $membership = GroupMember::where('group_id', $group->id)
+            ->where('user_id', $user->id)
+            ->first();
+
+        if ($membership === null) {
+            abort(403, 'You are not a member of this group.');
+        }
+
+        $members = GroupMember::where('group_id', $group->id)->with('user')->get();
+
+        return view('group', [
+            'group' => $group,
+            'membership' => $membership,
+            'members' => $members,
+        ]);
     }
 
     public function createGroup(Request $request): RedirectResponse
@@ -43,7 +65,7 @@ class GroupController extends Controller
             return $group;
         });
 
-        return redirect('/group/'.$group->id)->with('success', 'group created');
+        return redirect('/group/' . $group->id)->with('success', 'group created');
     }
 
     public function joinGroup(Request $request): RedirectResponse
@@ -68,7 +90,7 @@ class GroupController extends Controller
             return back()->withErrors(['invite_code' => 'This invite code does not exist.']);
         }
 
-        return redirect('/group/'.$group->id);
+        return redirect('/group/' . $group->id);
     }
 
     public function leaveGroup(Request $request): RedirectResponse
@@ -118,7 +140,7 @@ class GroupController extends Controller
             }
         }
 
-        return redirect('/group/'.$group->id);
+        return redirect('/group/' . $group->id);
     }
 
     public function deleteGroup(Request $request): RedirectResponse
