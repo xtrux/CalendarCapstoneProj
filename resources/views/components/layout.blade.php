@@ -24,6 +24,14 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
         </button>
+        
+
+        @auth
+          <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-bs-toggle="collapse"
+            data-bs-target="#groupSidebar" aria-expanded="true" aria-controls="groupSidebar">
+            ☰
+          </button>
+        @endauth
 
         {{-- end of claude --}}
         @auth
@@ -59,9 +67,31 @@
     </nav>
   @endunless
 
-  <main class="flex-grow-1 d-flex flex-column">
-    {{ $slot }}
-  </main>
+
+  <div class="d-flex flex-grow-1">
+    @auth
+  @unless(isset($hideNav))
+    <div class="collapse collapse-horizontal show" id="groupSidebar">
+      <aside class="border-end bg-light p-3 h-100" style="width: 220px;">
+        <h6 class="text-uppercase text-muted small fw-bold mb-3">My Groups</h6>
+        <div class="list-group list-group-flush mb-3">
+          @foreach (auth()->user()->groups as $g)
+            <a href="{{ '/group/' . $g->id }}"
+               class="list-group-item list-group-item-action border-0 rounded mb-1 {{ (isset($group) && $group->id === $g->id) ? 'active' : '' }}">
+              {{ $g->name }}
+            </a>
+          @endforeach
+        </div>
+        <a href="/group/create" class="btn btn-outline-secondary btn-sm w-100">+ Create Group</a>
+      </aside>
+    </div>
+  @endunless
+@endauth
+    <main class="flex-grow-1 d-flex flex-column">
+      {{ $slot }}
+    </main>
+  </div>
+
   @unless(isset($hideFooter))
     <footer class="text-center py-4 bg-light small">
       <div>
