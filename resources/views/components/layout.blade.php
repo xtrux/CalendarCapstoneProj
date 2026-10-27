@@ -13,6 +13,8 @@
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @livewireStyles
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -74,7 +76,7 @@
             <h6 class="text-uppercase text-muted small fw-bold mb-3">My Groups</h6>
             <div class="list-group list-group-flush mb-3">
               @foreach (auth()->user()->groups as $g)
-                <a href="{{ '/group/' . $g->id }}"
+                <a href="{{ '/group/' . $g->id }} "wire:navigate
                   class="list-group-item list-group-item-action border-0 rounded mb-1 {{ (isset($group) && $group->id === $g->id) ? 'active' : '' }}">
                   {{ $g->name }}
                 </a>
@@ -136,6 +138,7 @@
                 </div>
               </div>
             </div>
+@livewireScripts
 </body>
 
 </html>

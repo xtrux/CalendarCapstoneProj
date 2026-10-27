@@ -32,8 +32,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/changeProfilePicture', [SettingsController::class, 'changeProfilePicture']);
     Route::post('/deleteUser', [SettingsController::class, 'deleteUser']);
 
-
-
     Route::get('/group/{group}', [GroupController::class, 'show']);
-    Route::post('/group/create',[GroupController::class,'createGroup']);
+    Route::post('/group/create', [GroupController::class, 'createGroup']);
 });

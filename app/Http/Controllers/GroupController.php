@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\View\View;
+
 use App\Models\Group;
 use App\Models\GroupMember;
 use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Str;
 
 class GroupController extends Controller
@@ -19,7 +20,8 @@ class GroupController extends Controller
 
         return $code;
     }
-    // generated for testing 
+
+    // generated for testing
     // i did not write this method at all
     public function show(Group $group): View
     {
@@ -65,7 +67,7 @@ class GroupController extends Controller
             return $group;
         });
 
-        return redirect('/group/' . $group->id)->with('success', 'group created');
+        return redirect('/group/'.$group->id)->with('success', 'group created');
     }
 
     public function joinGroup(Request $request): RedirectResponse
@@ -90,7 +92,7 @@ class GroupController extends Controller
             return back()->withErrors(['invite_code' => 'This invite code does not exist.']);
         }
 
-        return redirect('/group/' . $group->id);
+        return redirect('/group/'.$group->id);
     }
 
     public function leaveGroup(Request $request): RedirectResponse
@@ -140,7 +142,7 @@ class GroupController extends Controller
             }
         }
 
-        return redirect('/group/' . $group->id);
+        return redirect('/group/'.$group->id);
     }
 
     public function deleteGroup(Request $request): RedirectResponse
