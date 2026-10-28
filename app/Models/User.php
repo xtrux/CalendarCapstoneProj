@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 /**
  * @property int $id
@@ -27,7 +28,7 @@ use Illuminate\Support\Str;
  */
 #[Fillable(['username', 'email', 'password', 'profile_picture'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -45,7 +46,7 @@ class User extends Authenticatable
             'locked_until' => 'datetime',
         ];
     }
-
+    
     /**
      * @return BelongsToMany<Group, $this>
      */

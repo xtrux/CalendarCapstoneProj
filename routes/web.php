@@ -26,6 +26,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', function () {
         return view('settings');
     });
+    //email verification stuff done by claude
+    Route::get('/email/verify', function () {
+        return view('verify-email');
+    })->middleware('throttle:6,1')->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect('/')->with('success', 'Email verified!');
+    })->middleware('signed')->name('verification.verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('success', 'Verification link sent.');
+    })->middleware('throttle:6,1')->name('verification.send');
+
+
+
     Route::post('/changeUsername', [SettingsController::class, 'changeUsername']);
     Route::post('/changePassword', [SettingsController::class, 'changePassword']);
     Route::post('/changeEmail', [SettingsController::class, 'changeEmail']);

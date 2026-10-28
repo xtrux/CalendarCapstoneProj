@@ -7,7 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Auth\Events\Registered;
 class AuthController extends Controller
 {
     public function register(Request $request): RedirectResponse
@@ -17,14 +17,14 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|min:8|regex:/[A-Z]/|confirmed',
         ]);
-        User::create([
+        $user = User::create([
             'username' => $validated['username'],
             'email' => $validated['email'],
             // laravel hashes it automatically with the user model
             'password' => $validated['password'],
 
         ]);
-
+        event(new Registered($user));
         return redirect('/login')->with('success', 'Account created! Please log in.');
     }
 
