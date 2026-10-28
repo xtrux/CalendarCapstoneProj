@@ -86,7 +86,11 @@
               data-bs-target="#createGroupModal">
               + Create Group
             </button>
-            
+            <br/>
+            <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" data-bs-toggle="modal"
+              data-bs-target="#joinGroupModal">
+               Join Group
+            </button>
 
 
           </aside>
@@ -138,6 +142,31 @@
                 </div>
               </div>
             </div>
+            <div class="modal fade" id="joinGroupModal" tabindex="-1" aria-labelledby="joinGroupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/group/join" method="POST">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title" id="joinGroupModalLabel">Join a Group</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label for="inviteCode" class="form-label">Invite code</label>
+          <input type="text" id="inviteCode" name="invite_code" class="form-control text-uppercase"
+            placeholder="e.g. AB12CD34" value="{{ old('invite_code') }}" required>
+          @error('invite_code')
+            <div class="text-danger small mt-1">{{ $message }}</div>
+          @enderror
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Join</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 @livewireScripts
 </body>
 

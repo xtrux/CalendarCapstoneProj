@@ -52,4 +52,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/group/{group}', [GroupController::class, 'show']);
     Route::post('/group/create', [GroupController::class, 'createGroup']);
+    Route::post('/group/join', [GroupController::class, 'joinGroup']);
+
+    Route::get('group/{group}/calendar',[CalendarController::class, 'display']);
 });
