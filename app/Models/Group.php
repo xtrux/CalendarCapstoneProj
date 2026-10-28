@@ -44,7 +44,7 @@ class Group extends Model
     /**
      * @return HasMany<Event, $this>
      */
-    public function event(): HasMany
+    public function events(): HasMany
     {
         return $this->hasMany(Event::class);
     }

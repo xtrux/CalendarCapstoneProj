@@ -54,5 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/group/create', [GroupController::class, 'createGroup']);
     Route::post('/group/join', [GroupController::class, 'joinGroup']);
 
-    Route::get('group/{group}/calendar',[CalendarController::class, 'display']);
+    Route::post('/group/leave', [GroupController::class, 'leaveGroup']);
+    Route::post('/group/delete', [GroupController::class, 'deleteGroup']);
+    Route::post('/group/regenerate-invite', [GroupController::class, 'regenerateInvite']);
+    Route::post('/group/remove-user', [GroupController::class, 'removeUser']);
+
+    Route::get('group/{group}/calendar', [CalendarController::class, 'display']);
 });

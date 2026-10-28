@@ -76,7 +76,7 @@
             <h6 class="text-uppercase text-muted small fw-bold mb-3">My Groups</h6>
             <div class="list-group list-group-flush mb-3">
               @foreach (auth()->user()->groups as $g)
-                <a href="{{ '/group/' . $g->id }} "wire:navigate
+                <a href="{{ '/group/' . $g->id }}" wire:navigate
                   class="list-group-item list-group-item-action border-0 rounded mb-1 {{ (isset($group) && $group->id === $g->id) ? 'active' : '' }}">
                   {{ $g->name }}
                 </a>
