@@ -67,7 +67,7 @@ class GroupController extends Controller
             return $group;
         });
 
-        return redirect('/group/'.$group->id)->with('success', 'group created');
+        return redirect('/group/' . $group->id)->with('success', 'group created');
     }
 
     public function joinGroup(Request $request): RedirectResponse
@@ -92,7 +92,7 @@ class GroupController extends Controller
             return back()->withErrors(['invite_code' => 'This invite code does not exist.']);
         }
 
-        return redirect('/group/'.$group->id);
+        return redirect('/group/' . $group->id);
     }
 
     public function leaveGroup(Request $request): RedirectResponse
@@ -106,10 +106,13 @@ class GroupController extends Controller
             return back()->withErrors(['failed' => 'this group doesnt exist?']);
 
         }
+
         $groupMember = GroupMember::where('group_id', $group->id)->where('user_id', $user->id)->first();
         if ($groupMember === null) {
             return back()->withErrors(['failed' => 'This user is not a member of this group.']);
-
+        }
+        if ($groupMember->role === 'admin') {
+            return back()->withErrors(['failed' => 'This user is an admin and cannot leave the group.']);
         } else {
             $groupMember->delete();
 
@@ -142,7 +145,7 @@ class GroupController extends Controller
             }
         }
 
-        return redirect('/group/'.$group->id);
+        return redirect('/group/' . $group->id);
     }
 
     public function deleteGroup(Request $request): RedirectResponse
@@ -181,7 +184,7 @@ class GroupController extends Controller
                 $code = $this->generateUniqueInviteCode();
                 $group->update(['invite_code' => $code]);
 
-                return redirect('/');
+                return redirect('/group/' . $group->id);
             }
 
         }

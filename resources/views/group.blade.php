@@ -1,9 +1,11 @@
 <x-layout :group="$group">
   <div class="p-4">
+    <a href="/group/{{ $group->id }}/calendar" class="btn btn-link px-0 mb-2">&larr; Back to calendar</a>
     <div class="d-flex justify-content-between align-items-start">
       <div>
         <h2>{{ $group->name }}</h2>
         <p class="text-muted mb-1">Invite code: {{ $group->invite_code }}</p>
+        
       </div>
       <div class="d-flex gap-2">
         @if ($membership->role === 'admin')
