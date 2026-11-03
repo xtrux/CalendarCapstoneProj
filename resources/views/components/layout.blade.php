@@ -117,6 +117,13 @@
       });
     </script>
   @endif
+  @if ($errors->has('invite_code'))
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      new bootstrap.Modal(document.getElementById('joinGroupModal')).show();
+    });
+  </script>
+@endif
   <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -154,7 +161,7 @@
           </div>
           <div class="modal-body">
             <label for="inviteCode" class="form-label">Invite code</label>
-            <input type="text" id="inviteCode" name="invite_code" class="form-control text-uppercase"
+            <input type="text" id="inviteCode" name="invite_code" class="form-control"
               placeholder="e.g. AB12CD34" value="{{ old('invite_code') }}" required>
             @error('invite_code')
               <div class="text-danger small mt-1">{{ $message }}</div>

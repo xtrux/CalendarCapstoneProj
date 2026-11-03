@@ -24,7 +24,7 @@
         <div class="text-center fw-bold small">{{ $dayName }}</div>
       @endforeach
       @foreach ($cells as $cell)
-        <div class="border p-2 {{ $cell['inMonth'] ? 'bg-white' : 'bg-light text-muted' }}" style="min-height: 80px;">
+        <div class="border p-2 {{ $cell['inMonth'] ? 'bg-white' : 'bg-light text-muted' }}"  style="min-height: 80px;">
           <p class="cellText">{{$cell['date']->day }}</p>
 
         </div>
