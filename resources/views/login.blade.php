@@ -8,7 +8,10 @@ hide-footer="true">
 
         <div class="card shadow rounded-4 border-0" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">
-
+                  @if (session('success'))
+                    <div class="alert alert-success small">{{ session('success') }}</div>
+                @endif
+                
                 <form action="/login" method="POST">
                     @csrf
                     @error('locked_until')

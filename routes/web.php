@@ -23,7 +23,16 @@ Route::get('/settings', function () {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);
+use App\Http\Controllers\PasswordResetController;
 
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])->name('password.update');
+});
+
+Route::get('/unlock/{user}', [AuthController::class, 'unlock'])->middleware('signed')->name('account.unlock');
 Route::middleware('auth')->group(function () {
     Route::get('/settings', function () {
         return view('settings');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\AccountLocked;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,16 +38,16 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $credentials['email'])->first();
         if ($user == null) {
-            return back()->withErrors(['email' => 'invalid email or passsword']);
+            return back()->withErrors(['locked_until' => 'Account is locked. Check your email for an unlock link, or reset your password.']);
         }
         if ($user->locked_until && $user->locked_until->isFuture()) {
             return back()->withErrors(['locked_until' => 'Account is currently locked']);
         }
         if (Hash::check($credentials['password'], $user->password)) {
-            $user->update([
+            $user->forceFill([
                 'failed_login_attempts' => 0,
                 'locked_until' => null,
-            ]);
+            ])->save();
             Auth::login($user);
             $request->session()->regenerate();
 
@@ -63,9 +64,10 @@ class AuthController extends Controller
         else {
             $user->failed_login_attempts += 1;
             if ($user->failed_login_attempts >= 5) {
-                $user->locked_until = now()->addMinutes(60);
+                $user->locked_until = now()->addYears(60);
+                $user->save();
+                $user->notify(new AccountLocked);
             }
-            $user->save();
 
             return back()->withErrors(['password' => 'invalid email or passsword']);
         }
