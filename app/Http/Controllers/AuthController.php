@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Notifications\AccountLocked;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
+
 class AuthController extends Controller
 {
     public function register(Request $request): RedirectResponse
@@ -26,6 +27,7 @@ class AuthController extends Controller
 
         ]);
         event(new Registered($user));
+
         return redirect('/login')->with('success', 'Account created! Please log in.');
     }
 
@@ -71,6 +73,16 @@ class AuthController extends Controller
 
             return back()->withErrors(['password' => 'invalid email or passsword']);
         }
+    }
+
+    public function unlock(User $user): RedirectResponse
+    {
+        $user->forceFill([
+            'failed_login_attempts' => 0,
+            'locked_until' => null,
+        ])->save();
+
+        return redirect('/login')->with('success', 'Your account is unlocked. You can log in now.');
     }
 
     public function logout(Request $request): RedirectResponse

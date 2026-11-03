@@ -10,7 +10,6 @@ use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-
 class CalendarController extends Controller
 {
     public function getAvailability(Request $request)
@@ -19,7 +18,7 @@ class CalendarController extends Controller
         $validated = $request->validate([
             'group_id' => 'required',
             'rangeStart' => 'required|date',
-            'rangeEnd' => 'required|date'
+            'rangeEnd' => 'required|date',
         ]);
 
         $group = Group::find($validated['group_id']);
@@ -37,7 +36,8 @@ class CalendarController extends Controller
         $rangeStart = $validated['rangeStart'];
         $rangeEnd = $validated['rangeEnd'];
         $availability = Availability::where('group_id', $group->id)->whereBetween('date', [$rangeStart, $rangeEnd])->get();
-        $byDate = $availability->groupBy(fn($row) => $row->date->format('Y-m-d'));
+        $byDate = $availability->groupBy(fn ($row) => $row->date->format('Y-m-d'));
+
         return $byDate;
     }
 
@@ -47,8 +47,10 @@ class CalendarController extends Controller
         $start = $monthCarbon->copy()->startOfWeek(Carbon::SUNDAY);
         $end = $monthCarbon->copy()->endOfMonth()->endOfWeek(Carbon::SATURDAY);
         $return = CarbonPeriod::create($start, $end);
+
         return $return;
     }
+
     public function display(Request $request, Group $group): View
     {
 
@@ -79,9 +81,6 @@ class CalendarController extends Controller
                 'inMonth' => $day->month === $month,
             ];
         }
-        
-        
-
 
         return view('calendar', [
             'group' => $group,
@@ -90,11 +89,7 @@ class CalendarController extends Controller
             'cells' => $cells,
             'first' => $first,
             'prev' => $prev,
-            'next' => $next
+            'next' => $next,
         ]);
     }
-
-
-
-
 }
