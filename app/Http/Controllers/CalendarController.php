@@ -36,7 +36,7 @@ class CalendarController extends Controller
         $rangeStart = $validated['rangeStart'];
         $rangeEnd = $validated['rangeEnd'];
         $availability = Availability::where('group_id', $group->id)->whereBetween('date', [$rangeStart, $rangeEnd])->get();
-        $byDate = $availability->groupBy(fn ($row) => $row->date->format('Y-m-d'));
+        $byDate = $availability->groupBy(fn($row) => $row->date->format('Y-m-d'));
 
         return $byDate;
     }
@@ -67,7 +67,7 @@ class CalendarController extends Controller
 
         $year = $request->integer('year', now()->year);
         $month = $request->integer('month', now()->month);
-        if ($month < 1 || $month > 12) {
+        if ($month < 1 || $month > 12 || $year < 1970 || $year > 2100) {
             $year = now()->year;
             $month = now()->month;
         }

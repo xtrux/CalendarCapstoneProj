@@ -40,9 +40,10 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $credentials['email'])->first();
         if ($user == null) {
-            return back()->withErrors(['locked_until' => 'Account is locked. Check your email for an unlock link, or reset your password.']);
+            return back()->withErrors(['invalid email' => 'user does not exist']);
         }
         if ($user->locked_until && $user->locked_until->isFuture()) {
+            return back()->withErrors(['locked_until' => 'Account is locked. Check your email for an unlock link, or reset your password.']);
             return back()->withErrors(['locked_until' => 'Account is currently locked']);
         }
         if (Hash::check($credentials['password'], $user->password)) {
@@ -68,9 +69,10 @@ class AuthController extends Controller
             if ($user->failed_login_attempts >= 5) {
                 $user->locked_until = now()->addYears(60);
                 $user->save();
+
                 $user->notify(new AccountLocked);
             }
-
+            $user->save();
             return back()->withErrors(['password' => 'invalid email or passsword']);
         }
     }

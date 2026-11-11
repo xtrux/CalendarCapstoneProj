@@ -5,7 +5,7 @@
       <div>
         <h2>{{ $group->name }}</h2>
         <p class="text-muted mb-1">Invite code: {{ $group->invite_code }}</p>
-        
+
       </div>
       <div class="d-flex gap-2">
         @if ($membership->role === 'admin')
@@ -41,9 +41,8 @@
           @if ($m->role === 'admin')
             <span class="badge bg-primary">Admin</span>
           @endif
-           @if ($membership->role === 'admin' && $m->user_id !== auth()->id())
-            <form action="/group/remove-user" method="POST"
-              onsubmit="return confirm('Remove {{ $m->user->username }} from this group?');">
+          @if ($membership->role === 'admin' && $m->user_id !== auth()->id())
+            <form action="/group/remove-user" method="POST" onsubmit="return confirm('Remove this user from this group?');">
               @csrf
               <input type="hidden" name="group_id" value="{{ $group->id }}">
               <input type="hidden" name="removed_id" value="{{ $m->user_id }}">
@@ -57,5 +56,5 @@
       @endforeach
     </ul>
   </div>
-  </div>
+
 </x-layout>

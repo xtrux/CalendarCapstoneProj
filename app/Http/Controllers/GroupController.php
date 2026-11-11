@@ -67,7 +67,7 @@ class GroupController extends Controller
             return $group;
         });
 
-        return redirect('/group/'.$group->id)->with('success', 'group created');
+        return redirect('/group/' . $group->id)->with('success', 'group created');
     }
 
     public function joinGroup(Request $request): RedirectResponse
@@ -92,7 +92,7 @@ class GroupController extends Controller
             return back()->withErrors(['invite_code' => 'This invite code does not exist.']);
         }
 
-        return redirect('/group/'.$group->id);
+        return redirect('/group/' . $group->id);
     }
 
     public function leaveGroup(Request $request): RedirectResponse
@@ -131,12 +131,17 @@ class GroupController extends Controller
         $group = Group::find($validated['group_id']);
         if ($group === null) {
             return back()->withErrors(['failed' => 'this group does not exist']);
+
         } else {
             if ($group->admin_user_id == $user->id) {
                 $groupMember = GroupMember::where('group_id', $group->id)->where('user_id', $validated['removed_id'])->first();
                 if ($groupMember === null) {
                     return back()->withErrors(['failed' => 'This user is not a member of this group.']);
                 } else {
+                    if ($groupMember->id == $group->admin_user_id) {
+                        return back()->withErrors(['failed' => 'the group admin cannot remove themselves']);
+
+                    }
                     $groupMember->delete();
 
                 }
@@ -145,7 +150,7 @@ class GroupController extends Controller
             }
         }
 
-        return redirect('/group/'.$group->id);
+        return redirect('/group/' . $group->id);
     }
 
     public function deleteGroup(Request $request): RedirectResponse
@@ -184,7 +189,7 @@ class GroupController extends Controller
                 $code = $this->generateUniqueInviteCode();
                 $group->update(['invite_code' => $code]);
 
-                return redirect('/group/'.$group->id);
+                return redirect('/group/' . $group->id);
             }
 
         }

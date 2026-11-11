@@ -11,7 +11,7 @@ hide-footer="true">
                   @if (session('success'))
                     <div class="alert alert-success small">{{ session('success') }}</div>
                 @endif
-                
+
                 <form action="/login" method="POST">
                     @csrf
                     @error('locked_until')
@@ -34,7 +34,7 @@ hide-footer="true">
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
                     <div class="text-end mb-3">
-                        <a href="#" class="small text-decoration-none">Forgot password?</a>
+                        <a href="/forgot-password" class="small text-decoration-none">Forgot password?</a>
                     </div>
 
                     <button type="submit" class="btn btn-dark w-100 rounded-pill py-2">Log in</button>

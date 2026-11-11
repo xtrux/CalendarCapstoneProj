@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ isset($title) ? $title . ' - Calendar' : 'Calendar' }}</title>
-  <link rel="preconnect" href="<https://fonts.bunny.net>">
+  <link rel="preconnect" href="https://fonts.bunny.net">
   {{-- <link rel="stylesheet" href="styles.css"> --}}
   <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
