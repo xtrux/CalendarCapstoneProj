@@ -44,7 +44,6 @@ class AuthController extends Controller
         }
         if ($user->locked_until && $user->locked_until->isFuture()) {
             return back()->withErrors(['locked_until' => 'Account is locked. Check your email for an unlock link, or reset your password.']);
-            return back()->withErrors(['locked_until' => 'Account is currently locked']);
         }
         if (Hash::check($credentials['password'], $user->password)) {
             $user->forceFill([
@@ -56,14 +55,6 @@ class AuthController extends Controller
 
             return redirect('/')->with('success', 'Logged in successfully');
         }
-        //  if (Auth::attempt($credentials, $request->boolean('remember'))) {
-        //          $user->update([
-        //              'failed_login_attempts' => 0,
-        //            'locked_until' => null,
-        //          ]);
-        //         $request->session()->regenerate();
-        //         return redirect('')->intended('/')->with('success', 'you are logged in');
-        //     }
         else {
             $user->failed_login_attempts += 1;
             if ($user->failed_login_attempts >= 5) {

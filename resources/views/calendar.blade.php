@@ -1,103 +1,146 @@
 <x-layout :group="$group">
   <style>
+    .cal-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+
+    /* 1px gaps over a grey background draw the divider lines between cells */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: #e5e7eb;
+    }
+
+    .cal-dayname {
+      background: #fff;
+      text-align: center;
+      padding: 0.75rem 0;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .cal-empty {
+      background: #f8fafc;
+      min-height: 110px;
+    }
+
     .calendar-cell {
       display: block;
       width: 100%;
       height: 100%;
-      min-height: 80px;
+      min-height: 110px;
+      padding: 0.75rem;
+      border: 0;
+      border-radius: 0;
       text-align: left;
       background: #fff;
-      border-radius: 0;
+      color: #111827;
     }
 
-    .status-allFree {
-      background: #d1e7dd;
-    }
-
-    .status-half {
-      background: #fff3cd;
-    }
-
-    .status-allBusy {
-      background: #f8d7da;
-    }
-
-    .calendar-cell:hover {
-      background: #f1f3f5;
-    }
+    .calendar-cell:hover { filter: brightness(0.96); }
 
     .calendar-cell:focus-visible {
-      outline: 2px solid #0d6efd;
-      outline-offset: -2px;
+      outline: 3px solid #0d6efd;
+      outline-offset: -3px;
     }
 
-    .calendar-cell.is-busy {
-      background: #f8d7da;
+    .cal-daynum {
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1;
     }
 
-    .calendar-cell .cell-status {
+    .cell-count {
+      display: block;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      color: #374151;
+    }
+
+    .cell-status {
+      display: inline-block;
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
       color: #842029;
     }
+
+    /* Group availability colours */
+    .status-allFree { background: #bbf7d0; }
+    .status-half    { background: #fef08a; }
+    .status-allBusy { background: #fecaca; }
+
+    .legend-swatch {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+      vertical-align: middle;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
   </style>
+
   <div class="p-4">
-    <h2>{{ $group->name }}</h2>
-    <p class="text-muted">Invite code: {{ $group->invite_code }}</p>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+      <h1 class="h2 fw-bold mb-0">{{ $first->format('F Y') }}</h1>
 
-
-    {{-- claude generated the buttons for me --}}
-    <a class="btn btn-outline-secondary btn-sm" href="/group/{{ $group->id }}" aria-label="Group settings">
-      Group settings
-    </a>
-    <div class="d-flex justify-content-between align-items-center my-3">
-
-      <a class="btn btn-outline-secondary btn-sm"
-        href="/group/{{ $group->id }}/calendar?year={{ $prev->year }}&month={{ $prev->month }}">&laquo; Prev</a>
-      <h5 class="mb-0">{{ $first->format('F Y') }}</h5>
-      <a class="btn btn-outline-secondary btn-sm"
-        href="/group/{{ $group->id }}/calendar?year={{ $next->year }}&month={{ $next->month }}">Next &raquo;</a>
-    </div>
-
-
-    <h6 class="mt-4">Calendar</h6>
-    <div style="display: grid ;grid-template-columns: repeat(7, 1fr)">
-      @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $dayName)
-        <div class="text-center fw-bold small">{{ $dayName }}</div>
-      @endforeach
-      @foreach ($cells as $cell)
-        @if ($cell['inMonth'])
-          <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0">
-            @csrf
-            <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
-            <button type="submit" class="calendar-cell border p-2 status-{{ $cell['status'] }}"
-              aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}">
-              <span class="d-block">{{ $cell['date']->day }}</span>
-              <small class="d-block cell-count">{{ $cell['busyCount'] }}/{{ $members->count() }} busy</small>
-              <small class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</small>
-            </button>
-          </form>
-        @else
-          <div class="border p-2 bg-light text-muted" style="min-height: 80px;">
-            <p class="mb-0">{{ $cell['date']->day }}</p>
-          </div>
-        @endif
-      @endforeach
-      {{-- @foreach ($cells as $cell)
-      <div class="border p-2 {{ $cell['inMonth'] ? 'bg-white' : 'bg-light text-muted' }}" style="min-height: 80px;">
-        <p class="mb-0">{{$cell['date']->day }}</p>
-
+      <div class="d-flex align-items-center gap-2">
+        {{-- Week 7: search and Filter/Sort Users go here. Week 10: Create Event. --}}
+        <a class="btn btn-outline-secondary icon-btn" aria-label="Previous month"
+          href="/group/{{ $group->id }}/calendar?year={{ $prev->year }}&month={{ $prev->month }}">&lsaquo;</a>
+        <a class="btn btn-outline-secondary icon-btn" aria-label="Next month"
+          href="/group/{{ $group->id }}/calendar?year={{ $next->year }}&month={{ $next->month }}">&rsaquo;</a>
+        <a class="btn btn-outline-secondary icon-btn" aria-label="Group settings"
+          href="/group/{{ $group->id }}">&#9776;</a>
       </div>
-
-
-      @endforeach --}}
-
     </div>
-    <span class="d-inline-block border me-1 status-allFree" style="width: 14px; height: 14px;"></span> Everyone free
-    <span class="d-inline-block border me-1 status-half" style="width: 14px; height: 14px;"></span> 50% of selected
-    users are free
-    <span class="d-inline-block border me-1 status-allBusy" style="width: 14px; height: 14px;"></span> No selected users
-    are free
 
+    <div class="cal-card">
+      <div class="cal-grid">
+        @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $dayName)
+          <div class="cal-dayname">{{ $dayName }}</div>
+        @endforeach
+
+        @foreach ($cells as $cell)
+          @if ($cell['inMonth'])
+            <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0">
+              @csrf
+              <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
+              <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
+                aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}"
+                aria-label="{{ $cell['date']->format('F j') }}">
+                <span class="cal-daynum">{{ $cell['date']->day }}</span>
+                <span class="cell-count">{{ $cell['busyCount'] }}/{{ $members->count() }} busy</span>
+                <span class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</span>
+              </button>
+            </form>
+          @else
+            <div class="cal-empty" aria-hidden="true"></div>
+          @endif
+        @endforeach
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-center gap-4 mt-4 small">
+      <span><span class="legend-swatch status-allFree me-2"></span>All members free</span>
+      <span><span class="legend-swatch status-half me-2"></span>Some members busy</span>
+      <span><span class="legend-swatch status-allBusy me-2"></span>All members busy</span>
+    </div>
   </div>
+
   <script>
     if (!window.availabilityToggleBound) {
       window.availabilityToggleBound = true;
