@@ -75,7 +75,7 @@ class SettingsController extends Controller
             ]);
         } else {
             // dd('wrong password branch reached');
-            return back()->withErrors(['password' => 'Old Password is Incorrect']);
+            return back()->withErrors(['oldPass' => 'Old Password is Incorrect']);
         }
 
         return redirect('/settings')->with('success', 'Password updated!');

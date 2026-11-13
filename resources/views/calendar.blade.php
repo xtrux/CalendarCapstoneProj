@@ -10,6 +10,18 @@
       border-radius: 0;
     }
 
+    .status-allFree {
+      background: #d1e7dd;
+    }
+
+    .status-half {
+      background: #fff3cd;
+    }
+
+    .status-allBusy {
+      background: #f8d7da;
+    }
+
     .calendar-cell:hover {
       background: #f1f3f5;
     }
@@ -56,9 +68,10 @@
           <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0">
             @csrf
             <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
-            <button type="submit" class="calendar-cell border p-2 {{ $cell['meBusy'] ? 'is-busy' : '' }}"
+            <button type="submit" class="calendar-cell border p-2 status-{{ $cell['status'] }}"
               aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}">
               <span class="d-block">{{ $cell['date']->day }}</span>
+              <small class="d-block cell-count">{{ $cell['busyCount'] }}/{{ $members->count() }} busy</small>
               <small class="cell-status">{{ $cell['meBusy'] ? 'Busy' : '' }}</small>
             </button>
           </form>
@@ -76,7 +89,14 @@
 
 
       @endforeach --}}
+
     </div>
+    <span class="d-inline-block border me-1 status-allFree" style="width: 14px; height: 14px;"></span> Everyone free
+    <span class="d-inline-block border me-1 status-half" style="width: 14px; height: 14px;"></span> 50% of selected
+    users are free
+    <span class="d-inline-block border me-1 status-allBusy" style="width: 14px; height: 14px;"></span> No selected users
+    are free
+
   </div>
   <script>
     if (!window.availabilityToggleBound) {
@@ -99,9 +119,10 @@
           if (!response.ok) throw new Error(response.status);
 
           const data = await response.json();
-          // button.textContent = data.busy ? 'Busy' : 'Free';
-          button.classList.toggle('is-busy', data.busy);
-          button.querySelector('.cell-status').textContent = data.busy ? 'Busy' : '';
+          button.classList.remove('status-allFree', 'status-half', 'status-allBusy');
+          button.classList.add('status-' + data.status);
+          button.querySelector('.cell-count').textContent = `${data.busyCount}/${data.memberCount} busy`;
+          button.querySelector('.cell-status').textContent = data.busy ? "You're busy" : '';
           button.setAttribute('aria-pressed', data.busy);
         } catch (error) {
           location.reload(); // something went wrong: reload to show the real state
