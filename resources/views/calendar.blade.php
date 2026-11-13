@@ -72,7 +72,7 @@
               aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}">
               <span class="d-block">{{ $cell['date']->day }}</span>
               <small class="d-block cell-count">{{ $cell['busyCount'] }}/{{ $members->count() }} busy</small>
-              <small class="cell-status">{{ $cell['meBusy'] ? 'Busy' : '' }}</small>
+              <small class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</small>
             </button>
           </form>
         @else
