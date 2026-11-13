@@ -68,4 +68,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/group/remove-user', [GroupController::class, 'removeUser']);
 
     Route::get('group/{group}/calendar', [CalendarController::class, 'display']);
+    Route::post('/group/{group}/availability', [CalendarController::class, 'toggleAvailability']);
 });

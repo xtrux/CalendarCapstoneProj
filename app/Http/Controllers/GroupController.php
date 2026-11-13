@@ -138,7 +138,7 @@ class GroupController extends Controller
                 if ($groupMember === null) {
                     return back()->withErrors(['failed' => 'This user is not a member of this group.']);
                 } else {
-                    if ($groupMember->id == $group->admin_user_id) {
+                    if ($groupMember->user_id == $group->admin_user_id) {
                         return back()->withErrors(['failed' => 'the group admin cannot remove themselves']);
 
                     }

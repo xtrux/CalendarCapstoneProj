@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Attributes\Table;
 /**
  * @property int $id
  * @property int $group_id
@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $date
  * @property string $status
  **/
+#[Table('availability')]
 #[Fillable(['group_id', 'user_id', 'date', 'status'])]
 class Availability extends Model
 {
