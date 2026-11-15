@@ -14,33 +14,33 @@ use Illuminate\View\View;
 
 class CalendarController extends Controller
 {
-    public function getAvailability(Request $request)
-    {
-        $user = auth()->user();
-        $validated = $request->validate([
-            'group_id' => 'required',
-            'rangeStart' => 'required|date',
-            'rangeEnd' => 'required|date',
-        ]);
+    // public function getAvailability(Request $request)
+    // {
+    //     $user = auth()->user();
+    //     $validated = $request->validate([
+    //         'group_id' => 'required',
+    //         'rangeStart' => 'required|date',
+    //         'rangeEnd' => 'required|date',
+    //     ]);
 
-        $group = Group::find($validated['group_id']);
-        if ($group === null) {
-            abort(404, 'This group could not be found.');
-        }
-        $membership = GroupMember::where('group_id', $group->id)
-            ->where('user_id', $user->id)
-            ->first();
+    //     $group = Group::find($validated['group_id']);
+    //     if ($group === null) {
+    //         abort(404, 'This group could not be found.');
+    //     }
+    //     $membership = GroupMember::where('group_id', $group->id)
+    //         ->where('user_id', $user->id)
+    //         ->first();
 
-        if ($membership === null) {
-            abort(403, 'You are not a member of this group.');
-        }
+    //     if ($membership === null) {
+    //         abort(403, 'You are not a member of this group.');
+    //     }
 
-        $rangeStart = $validated['rangeStart'];
-        $rangeEnd = $validated['rangeEnd'];
-        $availability = Availability::where('group_id', $group->id)->whereBetween('date', [$rangeStart, $rangeEnd])->get();
-        $byDate = $availability->groupBy(fn($row) => $row->date->format('Y-m-d'));
-        return $byDate;
-    }
+    //     $rangeStart = $validated['rangeStart'];
+    //     $rangeEnd = $validated['rangeEnd'];
+    //     $availability = Availability::where('group_id', $group->id)->whereBetween('date', [$rangeStart, $rangeEnd])->get();
+    //     $byDate = $availability->groupBy(fn($row) => $row->date->format('Y-m-d'));
+    //     return $byDate;
+    // }
 
     public function cellGenerator(int $year, int $month): CarbonPeriod
     {
