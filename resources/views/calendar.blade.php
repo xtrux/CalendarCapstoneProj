@@ -1,4 +1,9 @@
 <x-layout :group="$group">
+  @php
+    $filtered = $selectedIds->count() < $members->count();
+    $who = $filtered ? 'selected members' : 'members';
+  @endphp
+
   <style>
     .cal-card {
       border: 1px solid #e5e7eb;
@@ -98,11 +103,42 @@
       <h1 class="h2 fw-bold mb-0">{{ $first->format('F Y') }}</h1>
 
       <div class="d-flex align-items-center gap-2">
-        {{-- Week 7: search and Filter/Sort Users go here. Week 10: Create Event. --}}
+        {{-- Week 7: search goes here. Week 10: Create Event. --}}
+
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            Filter users{{ $filtered ? ' (' . $selectedIds->count() . ')' : '' }}
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 240px;">
+            <form method="GET" action="/group/{{ $group->id }}/calendar">
+              <input type="hidden" name="year" value="{{ $first->year }}">
+              <input type="hidden" name="month" value="{{ $first->month }}">
+
+              <div class="fw-semibold small mb-2">Filter by user</div>
+              @foreach ($members as $m)
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="users[]" value="{{ $m->user_id }}"
+                    id="filter-user-{{ $m->user_id }}" @checked($selectedIds->contains($m->user_id))>
+                  <label class="form-check-label" for="filter-user-{{ $m->user_id }}">
+                    {{ $m->user->username }}
+                  </label>
+                </div>
+              @endforeach
+
+              <div class="d-flex gap-2 mt-3">
+                <a class="btn btn-outline-secondary btn-sm flex-fill"
+                  href="/group/{{ $group->id }}/calendar?year={{ $first->year }}&month={{ $first->month }}">Show everyone</a>
+                <button type="submit" class="btn btn-primary btn-sm flex-fill">Apply</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <a class="btn btn-outline-secondary icon-btn" aria-label="Previous month"
-          href="/group/{{ $group->id }}/calendar?year={{ $prev->year }}&month={{ $prev->month }}">&lsaquo;</a>
+          href="{{ request()->fullUrlWithQuery(['year' => $prev->year, 'month' => $prev->month]) }}">&lsaquo;</a>
         <a class="btn btn-outline-secondary icon-btn" aria-label="Next month"
-          href="/group/{{ $group->id }}/calendar?year={{ $next->year }}&month={{ $next->month }}">&rsaquo;</a>
+          href="{{ request()->fullUrlWithQuery(['year' => $next->year, 'month' => $next->month]) }}">&rsaquo;</a>
         <a class="btn btn-outline-secondary icon-btn" aria-label="Group settings"
           href="/group/{{ $group->id }}">&#9776;</a>
       </div>
@@ -119,11 +155,16 @@
             <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0">
               @csrf
               <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
+              @if ($filtered)
+                @foreach ($selectedIds as $id)
+                  <input type="hidden" name="users[]" value="{{ $id }}">
+                @endforeach
+              @endif
               <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
                 aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}"
                 aria-label="{{ $cell['date']->format('F j') }}">
                 <span class="cal-daynum">{{ $cell['date']->day }}</span>
-                <span class="cell-count">{{ $cell['busyCount'] }}/{{ $members->count() }} busy</span>
+                <span class="cell-count">{{ $cell['busyCount'] }}/{{ $selectedIds->count() }} busy</span>
                 <span class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</span>
               </button>
             </form>
@@ -135,9 +176,9 @@
     </div>
 
     <div class="d-flex flex-wrap justify-content-center gap-4 mt-4 small">
-      <span><span class="legend-swatch status-allFree me-2"></span>All members free</span>
-      <span><span class="legend-swatch status-half me-2"></span>Some members busy</span>
-      <span><span class="legend-swatch status-allBusy me-2"></span>All members busy</span>
+      <span><span class="legend-swatch status-allFree me-2"></span>All {{ $who }} free</span>
+      <span><span class="legend-swatch status-half me-2"></span>Some {{ $who }} busy</span>
+      <span><span class="legend-swatch status-allBusy me-2"></span>All {{ $who }} busy</span>
     </div>
   </div>
 

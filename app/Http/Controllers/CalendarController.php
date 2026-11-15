@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
+use Illuminate\Support\Collection;
 class CalendarController extends Controller
 {
     // public function getAvailability(Request $request)
@@ -76,22 +76,46 @@ class CalendarController extends Controller
                 'status' => 'busy',
             ]);
         }
+        $memberIds = GroupMember::where('group_id', $group->id)->pluck('user_id');
+        $selectedIds = $this->selectedUserIds($request, $memberIds);
+
         if ($request->expectsJson()) {
             $busyCount = Availability::where('group_id', $group->id)
                 ->where('date', $validated['date'])
+                ->whereIn('user_id', $selectedIds)
                 ->count();
-            $memberCount = GroupMember::where('group_id', $group->id)->count();
+
             return response()->json([
-                'busy' => !$existing,   // true if the day is now marked busy
+                'busy' => !$existing,
                 'busyCount' => $busyCount,
-                'memberCount' => $memberCount,
-                'status' => self::statusFor($busyCount, $memberCount)
+                'memberCount' => $selectedIds->count(),
+                'status' => self::statusFor($busyCount, $selectedIds->count()),
             ]);
         }
 
         $date = Carbon::parse($validated['date']);
 
-        return redirect("/group/{$group->id}/calendar?year={$date->year}&month={$date->month}");
+        return redirect("/group/{$group->id}/calendar?" . http_build_query([
+            'year' => $date->year,
+            'month' => $date->month,
+            'users' => $request->input('users', []),
+        ]));
+        // if ($request->expectsJson()) {
+        //     $busyCount = Availability::where('group_id', $group->id)
+        //         ->where('date', $validated['date'])
+        //         ->count();
+        //     $memberCount = GroupMember::where('group_id', $group->id)->count();
+        //     return response()->json([
+        //         'busy' => !$existing,   // true if the day is now marked busy
+        //         'busyCount' => $busyCount,
+        //         'memberCount' => $memberCount,
+        //         'status' => self::statusFor($busyCount, $memberCount)
+        //     ]);
+        // }
+
+        // $date = Carbon::parse($validated['date']);
+
+        // return redirect("/group/{$group->id}/calendar?year={$date->year}&month={$date->month}");
     }
     public static function statusFor(int $busyCount, int $memberCount): string
     {
@@ -103,7 +127,15 @@ class CalendarController extends Controller
             return "half";
         }
     }
+    private function selectedUserIds(Request $request, Collection $memberIds): Collection
+    {
+        $selected = collect($request->input('users', []))
+            ->map(fn($id) => (int) $id)
+            ->intersect($memberIds)   // ignore IDs that aren't in this group
+            ->values();
 
+        return $selected->isEmpty() ? $memberIds : $selected;
+    }
     public function display(Request $request, Group $group): View
     {
 
@@ -117,6 +149,12 @@ class CalendarController extends Controller
             abort(403, 'You are not a member of this group.');
         }
         $members = GroupMember::where('group_id', $group->id)->with('user')->get();
+
+        // filtering
+        $memberIds = $members->pluck('user_id');
+
+        $selectedIds = $this->selectedUserIds($request, $memberIds);
+
 
         $year = $request->integer('year', now()->year);
         $month = $request->integer('month', now()->month);
@@ -132,7 +170,7 @@ class CalendarController extends Controller
 
         $busyByDate = Availability::where('group_id', $group->id)
             ->whereBetween('date', [$period->getStartDate()->toDateString(), $period->getEndDate()->toDateString()])
-            ->get()
+            ->whereIn('user_id', $selectedIds)->get()
             ->groupBy(fn($row) => $row->date->format('Y-m-d'));
 
         $cells = [];
@@ -144,7 +182,7 @@ class CalendarController extends Controller
                 'inMonth' => $day->month === $month,
                 'meBusy' => $busy->contains('user_id', $user->id),
                 'busyCount' => $busy->count(),
-                'status' => self::statusFor($busy->count(), $members->count()),
+                'status' => self::statusFor($busy->count(), $selectedIds->count()),
             ];
         }
 
@@ -153,6 +191,7 @@ class CalendarController extends Controller
             'group' => $group,
             'membership' => $membership,
             'members' => $members,
+            'selectedIds' => $selectedIds,
             'cells' => $cells,
             'first' => $first,
             'prev' => $prev,
