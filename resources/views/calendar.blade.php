@@ -6,7 +6,7 @@
 
   <style>
     .cal-card {
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--bs-border-color);
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -17,15 +17,15 @@
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 1px;
-      background: #e5e7eb;
+      background: var(--bs-border-color);
     }
 
     .cal-dayname {
-      background: #fff;
+      background: var(--bs-body-bg);
       text-align: center;
       padding: 0.75rem 0;
       font-weight: 500;
-      color: #374151;
+      color: var(--bs-body-color);
     }
 
     .cal-empty {
@@ -42,7 +42,7 @@
       border: 0;
       border-radius: 0;
       text-align: left;
-      background: #fff;
+      background: var(--bs-body-bg);
       color: #111827;
     }
 
@@ -117,7 +117,7 @@
       <h1 class="h2 fw-bold mb-0">{{ $first->format('F Y') }}</h1>
 
       <div class="d-flex align-items-center gap-2">
-        {{-- Week 7: search goes here. Week 10: Create Event. --}}
+        {{-- Week10:CreateEvent. --}}
         <form method="GET" action="/group/{{ $group->id }}/calendar" class="d-flex gap-1" role="search">
           @if ($filtered)
             @foreach ($selectedIds as $id)

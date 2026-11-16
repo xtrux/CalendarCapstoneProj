@@ -2,9 +2,9 @@
 {{-- hide-nav="true"  --}}
 hide-footer="true">
     <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient p-4 flex-grow-1">
-        <h2 class="fw-bold text-center text-dark mb-4">Ready to keep track of time?</h2>
+        <h2 class="fw-bold text-center text-body-emphasis mb-4">Ready to keep track of time?</h2>
 
-        <h3 class="fw-bold text-center text-dark mb-4">Sign in to your account</h3>
+        <h3 class="fw-bold text-center text-body-emphasis mb-4">Sign in to your account</h3>
 
         <div class="card shadow rounded-4 border-0" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">
@@ -19,7 +19,7 @@ hide-footer="true">
                     @enderror
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control bg-light border-0" id="email" name="email"
+                        <input type="email" class="form-control bg-body-tertiary border-0" id="email" name="email"
                             value="{{ old('email') }}" placeholder="Enter your email" required>
                     </div>
                     @error('email')
@@ -27,7 +27,7 @@ hide-footer="true">
                     @enderror
                     <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control bg-light border-0" id="password" name="password"
+                        <input type="password" class="form-control bg-body-tertiary border-0" id="password" name="password"
                             placeholder="Enter your password" required>
                     </div>
                     @error('password')

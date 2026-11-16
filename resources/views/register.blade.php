@@ -2,8 +2,8 @@
 {{-- hide-nav="true" --}}
  hide-footer="true">
     <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient p-4 flex-grow-1">
-        <h2 class="fw-bold text-center text-dark mb-2">Ready to keep track of time?</h2>
-<h3 class="fw-bold text-center text-dark mb-3">Sign up for an account</h3>
+        <h2 class="fw-bold text-center text-body-emphasis mb-2">Ready to keep track of time?</h2>
+<h3 class="fw-bold text-center text-body-emphasis mb-3">Sign up for an account</h3>
 
         <div class="card shadow rounded-4 border-0" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">
@@ -13,7 +13,7 @@
 
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control bg-light border-0  @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}"
+                        <input type="text" class="form-control bg-body-tertiary border-0  @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}"
                             placeholder="Enter your Username" required>
                     </div>
                     @error('username')
@@ -21,7 +21,7 @@
                     @enderror
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control bg-light border-0 @error('email') is-invalid @enderror" id="email" name="email"
+                        <input type="email" class="form-control bg-body-tertiary border-0 @error('email') is-invalid @enderror" id="email" name="email"
                             placeholder="Enter your email" value="{{ old('email') }}" required>
                     </div>
                     @error('email')
@@ -29,7 +29,7 @@
                     @enderror
                     <div class="mb-2">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control bg-light border-0 @error('password') is-invalid @enderror" id="password" name="password"
+                        <input type="password" class="form-control bg-body-tertiary border-0 @error('password') is-invalid @enderror" id="password" name="password"
                             placeholder="Enter your password" required>
                     </div>
                     @error('password')
@@ -37,7 +37,7 @@
                     @enderror
                     <div class="mb-2">
                         <label for="password_confirmation" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control bg-light border-0 @error('password') is-invalid @enderror" id="password_confirmation"
+                        <input type="password" class="form-control bg-body-tertiary border-0 @error('password') is-invalid @enderror" id="password_confirmation"
                             name="password_confirmation" placeholder="Enter your password again" required>
                     </div>
 

@@ -39,7 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/email/verify', function () {
         return view('verify-email');
     })->middleware('throttle:6,1')->name('verification.notice');
-
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
 
@@ -69,4 +68,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('group/{group}/calendar', [CalendarController::class, 'display']);
     Route::post('/group/{group}/availability', [CalendarController::class, 'toggleAvailability']);
+
+
+    Route::post('/changeTheme', [SettingsController::class, 'changeTheme']);
 });

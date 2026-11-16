@@ -1,7 +1,7 @@
 <x-layout title="Settings" hide-footer="true">
     <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient  p-4"
         style="min-height: 100vh;">
-        <h2 class="fw-bold text-center text-dark mb-4">Welcome {{auth()->user()->username}}</h2>
+        <h2 class="fw-bold text-center text-body-emphasis mb-4">Welcome {{auth()->user()->username}}</h2>
 
         @if ($user->profile_picture ?? auth()->user()->profile_picture)
             <img src="{{ asset('storage/' . auth()->user()->profile_picture) }}" alt="Profile picture"
@@ -28,7 +28,7 @@
                     <div class="mb-3">
                         <label for="profile_picture" class="form-label">Change Profile Picture</label>
                         <div class="d-flex gap-2">
-                            <input type="file" class="form-control bg-light border-0" id="profile_picture"
+                            <input type="file" class="form-control bg-body-tertiary border-0" id="profile_picture"
                                 name="profile_picture" accept="image/png, image/jpeg, image/webp" required>
                             <button type="submit" class="btn btn-dark rounded-pill py-2">Update</button>
                         </div>
@@ -45,7 +45,7 @@
                     <div class="mb-3">
                         <label for="username" class="form-label">Change Username</label>
                         <div class="d-flex gap-2">
-                            <input type="text" class="form-control bg-light border-0" id="username" name="username"
+                            <input type="text" class="form-control bg-body-tertiary border-0" id="username" name="username"
                                 placeholder="your new username" required>
                             <button type="submit" class="btn btn-dark  rounded-pill py-2">Update</button>
                         </div>
@@ -57,7 +57,7 @@
                     <div class="mb-3 ">
                         <label for="email" class="form-label">Change Email</label>
                         <div class="d-flex gap-2">
-                            <input type="email" class="form-control bg-light border-0" id="email" name="email"
+                            <input type="email" class="form-control bg-body-tertiary border-0" id="email" name="email"
                                 placeholder="your new email" required>
                             <button type="submit" class="btn btn-dark  rounded-pill py-2">Update</button>
                         </div>
@@ -69,7 +69,7 @@
                     <div class="mb-3 gap-3">
                         <label for="oldPass" class="form-label">Change Password</label>
                         <div class="mb-3">
-                            <input type="password" class="form-control bg-light border-0" id="oldPass" name="oldPass"
+                            <input type="password" class="form-control bg-body-tertiary border-0" id="oldPass" name="oldPass"
                                 placeholder="old password" required>
                             @error('oldPass')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="mb-3">
 
-                            <input type="password" class="form-control bg-light border-0" id="newPass" name="newPass"
+                            <input type="password" class="form-control bg-body-tertiary border-0" id="newPass" name="newPass"
                                 placeholder="new password" required>
                             @error('newPass')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -85,7 +85,7 @@
                         </div>
                         <div class="mb-3">
 
-                            <input type="password" class="form-control bg-light border-0" id="newPass_confirmation"
+                            <input type="password" class="form-control bg-body-tertiary border-0" id="newPass_confirmation"
                                 name="newPass_confirmation" placeholder="confirm new password" required>
                         </div>
                         <button type="submit" class="btn btn-dark w-100  rounded-pill py-2">Update</button>
@@ -99,7 +99,7 @@
                     <div class="mb-3 gap-3">
                         <label for="password" class="form-label">Delete Account Password</label>
                         <div class="mb-3">
-                            <input type="password" class="form-control bg-light border-0" id="password" name="password"
+                            <input type="password" class="form-control bg-body-tertiary border-0" id="password" name="password"
                                 placeholder="old password" required>
                             @error('password')
                                 <div class="text-danger small mt-1">{{ $message }}</div>

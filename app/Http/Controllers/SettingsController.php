@@ -92,8 +92,8 @@ class SettingsController extends Controller
             Storage::disk('public')->delete($user->profile_picture);
         }
         $file = $request->file('profile_picture');
-        $filename = Str::random(40).'.'.$file->extension();
-        $path = 'profile_pictures/'.$filename;
+        $filename = Str::random(40) . '.' . $file->extension();
+        $path = 'profile_pictures/' . $filename;
 
         // Storage::disk('public')->put($path, file_get_contents($file->getPathname()));
         $contents = file_get_contents($file->getPathname());
@@ -104,5 +104,19 @@ class SettingsController extends Controller
         $user->update(['profile_picture' => $path]);
 
         return redirect('/settings')->with('success', 'Profile Picture Updated!');
+    }
+    public function changeTheme(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'theme' => 'required|in:light,dark',
+        ]);
+
+        $user = auth()->user();
+        $user->theme_preference = $validated['theme']; 
+        $user->save();
+
+       
+
+        return back();
     }
 }

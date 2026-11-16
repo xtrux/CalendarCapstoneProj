@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="{{ auth()->user()?->theme_preference === 'dark' ? 'dark' : 'light' }}">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ isset($title) ? $title . ' - Calendar' : 'Calendar' }}</title>
   <link rel="preconnect" href="https://fonts.bunny.net">
-  {{-- <link rel="stylesheet" href="styles.css"> --}}
+  {{--
+  <link rel="stylesheet" href="styles.css"> --}}
   <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -52,7 +53,16 @@
                   {{ auth()->user()->initials() }}
                 </div>
               @endif
-
+              {{-- dark mode --}}
+              @php $isDark = auth()->user()->theme_preference === 'dark'; @endphp
+              <form action="/changeTheme" method="POST" class="d-inline" id="theme-toggle-form">
+                @csrf
+                <input type="hidden" name="theme" value="{{ $isDark ? 'light' : 'dark' }}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill"
+                  aria-label="Switch to {{ $isDark ? 'light' : 'dark' }} mode">
+                  {{ $isDark ? 'Light mode' : 'Dark mode' }}
+                </button>
+              </form>
               <form action="/logout" method="POST" class="d-inline">
                 @csrf
                 <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill">Log Out</button>
@@ -73,7 +83,7 @@
     @auth
       @unless(isset($hideNav))
         <div class="collapse collapse-horizontal show" id="groupSidebar">
-          <aside class="border-end bg-light p-3 h-100" style="width: 220px;">
+          <aside class="border-end bg-body-tertiary p-3 h-100" style="width: 220px;">
             <h6 class="text-uppercase text-muted small fw-bold mb-3">My Groups</h6>
             <div class="list-group list-group-flush mb-3">
               @foreach (auth()->user()->groups as $g)
@@ -104,7 +114,7 @@
   </div>
 
   @unless(isset($hideFooter))
-    <footer class="text-center py-4 bg-light small">
+    <footer class="text-center py-4 bg-body-tertiary small">
       <div>
         <p>© 2026 Calendar App</p>
       </div>
@@ -118,12 +128,12 @@
     </script>
   @endif
   @if ($errors->has('invite_code'))
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      new bootstrap.Modal(document.getElementById('joinGroupModal')).show();
-    });
-  </script>
-@endif
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        new bootstrap.Modal(document.getElementById('joinGroupModal')).show();
+      });
+    </script>
+  @endif
   <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -161,8 +171,8 @@
           </div>
           <div class="modal-body">
             <label for="inviteCode" class="form-label">Invite code</label>
-            <input type="text" id="inviteCode" name="invite_code" class="form-control"
-              placeholder="e.g. AB12CD34" value="{{ old('invite_code') }}" required>
+            <input type="text" id="inviteCode" name="invite_code" class="form-control" placeholder="e.g. AB12CD34"
+              value="{{ old('invite_code') }}" required>
             @error('invite_code')
               <div class="text-danger small mt-1">{{ $message }}</div>
             @enderror
@@ -175,6 +185,39 @@
       </div>
     </div>
   </div>
+  <script>
+  if (!window.themeToggleBound) {
+    window.themeToggleBound = true;
+
+    document.addEventListener('submit', async (event) => {
+      const form = event.target.closest('#theme-toggle-form');
+      if (!form) return;
+
+      event.preventDefault();
+      const input = form.querySelector('input[name="theme"]');
+      const button = form.querySelector('button');
+      const newTheme = input.value;
+      const body = new FormData(form);
+
+      document.documentElement.setAttribute('data-bs-theme', newTheme); // switch right away
+
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body,
+      });
+      if (!response.ok) {
+        location.reload(); // saving failed: reload to show the real saved theme
+        return;
+      }
+
+      const next = newTheme === 'dark' ? 'light' : 'dark';
+      input.value = next;
+      button.textContent = newTheme === 'dark' ? 'Light mode' : 'Dark mode';
+      button.setAttribute('aria-label', `Switch to ${next} mode`);
+    });
+  }
+</script>
   @livewireScripts
 </body>
 

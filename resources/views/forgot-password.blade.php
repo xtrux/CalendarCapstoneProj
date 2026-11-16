@@ -1,6 +1,6 @@
 <x-layout title="Forgot Password" hide-footer="true">
     <div class="d-flex flex-column justify-content-center align-items-center bg-primary bg-gradient p-4 flex-grow-1">
-        <h3 class="fw-bold text-center text-dark mb-4">Reset your password</h3>
+        <h3 class="fw-bold text-center text-body-emphasis mb-4">Reset your password</h3>
 
         <div class="card shadow rounded-4 border-0" style="max-width: 400px; width: 100%;">
             <div class="card-body p-4">
@@ -14,7 +14,7 @@
                     @csrf
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
-                        <input type="email" class="form-control bg-light border-0" id="email" name="email"
+                        <input type="email" class="form-control bg-body-tertiary border-0" id="email" name="email"
                             value="{{ old('email') }}" placeholder="Enter your email" required>
                         @error('email')
                             <div class="text-danger small mt-1">{{ $message }}</div>
