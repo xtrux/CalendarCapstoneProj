@@ -35,8 +35,9 @@
 
 
 
-
-          <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          {{-- <button class="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"> --}}
             <span class="navbar-toggler-icon"></span>
           </button>
         </div>
@@ -93,12 +94,12 @@
                 </a>
               @endforeach
             </div>
-            <button type="button" class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal"
+            <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-toggle="modal"
               data-bs-target="#createGroupModal">
               + Create Group
             </button>
             <br />
-            <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2" data-bs-toggle="modal"
+            <button type="button" class="btn btn-secondary btn-sm w-100 mt-2" data-bs-toggle="modal"
               data-bs-target="#joinGroupModal">
               Join Group
             </button>
@@ -186,38 +187,38 @@
     </div>
   </div>
   <script>
-  if (!window.themeToggleBound) {
-    window.themeToggleBound = true;
+    if (!window.themeToggleBound) {
+      window.themeToggleBound = true;
 
-    document.addEventListener('submit', async (event) => {
-      const form = event.target.closest('#theme-toggle-form');
-      if (!form) return;
+      document.addEventListener('submit', async (event) => {
+        const form = event.target.closest('#theme-toggle-form');
+        if (!form) return;
 
-      event.preventDefault();
-      const input = form.querySelector('input[name="theme"]');
-      const button = form.querySelector('button');
-      const newTheme = input.value;
-      const body = new FormData(form);
+        event.preventDefault();
+        const input = form.querySelector('input[name="theme"]');
+        const button = form.querySelector('button');
+        const newTheme = input.value;
+        const body = new FormData(form);
 
-      document.documentElement.setAttribute('data-bs-theme', newTheme); // switch right away
+        document.documentElement.setAttribute('data-bs-theme', newTheme); // switch right away
 
-      const response = await fetch(form.action, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body,
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body,
+        });
+        if (!response.ok) {
+          location.reload(); // saving failed: reload to show the real saved theme
+          return;
+        }
+
+        const next = newTheme === 'dark' ? 'light' : 'dark';
+        input.value = next;
+        button.textContent = newTheme === 'dark' ? 'Light mode' : 'Dark mode';
+        button.setAttribute('aria-label', `Switch to ${next} mode`);
       });
-      if (!response.ok) {
-        location.reload(); // saving failed: reload to show the real saved theme
-        return;
-      }
-
-      const next = newTheme === 'dark' ? 'light' : 'dark';
-      input.value = next;
-      button.textContent = newTheme === 'dark' ? 'Light mode' : 'Dark mode';
-      button.setAttribute('aria-label', `Switch to ${next} mode`);
-    });
-  }
-</script>
+    }
+  </script>
   @livewireScripts
 </body>
 
