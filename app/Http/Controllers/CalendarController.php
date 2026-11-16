@@ -100,22 +100,7 @@ class CalendarController extends Controller
             'month' => $date->month,
             'users' => $request->input('users', []),
         ]));
-        // if ($request->expectsJson()) {
-        //     $busyCount = Availability::where('group_id', $group->id)
-        //         ->where('date', $validated['date'])
-        //         ->count();
-        //     $memberCount = GroupMember::where('group_id', $group->id)->count();
-        //     return response()->json([
-        //         'busy' => !$existing,   // true if the day is now marked busy
-        //         'busyCount' => $busyCount,
-        //         'memberCount' => $memberCount,
-        //         'status' => self::statusFor($busyCount, $memberCount)
-        //     ]);
-        // }
-
-        // $date = Carbon::parse($validated['date']);
-
-        // return redirect("/group/{$group->id}/calendar?year={$date->year}&month={$date->month}");
+        
     }
     public static function statusFor(int $busyCount, int $memberCount): string
     {
@@ -136,7 +121,7 @@ class CalendarController extends Controller
 
         return $selected->isEmpty() ? $memberIds : $selected;
     }
-    public function display(Request $request, Group $group): View
+    public function display(Request $request, Group $group): View|JsonResponse
     {
 
         $user = auth()->user();

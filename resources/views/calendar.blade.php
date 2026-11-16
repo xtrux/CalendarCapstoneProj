@@ -180,20 +180,20 @@
         @endforeach
         @foreach ($cells as $cell)
           @if ($cell['inMonth'])
-            <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0" @if ($cell['selected']) data-selected="1" @endif></form>>
-            @csrf
-            <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
-            @if ($filtered)
-              @foreach ($selectedIds as $id)
-                <input type="hidden" name="users[]" value="{{ $id }}">
-              @endforeach
-            @endif
-            <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
-              aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}" aria-label="{{ $cell['date']->format('F j') }}">
-              <span class="cal-daynum">{{ $cell['date']->day }}</span>
-              <span class="cell-count">{{ $cell['busyCount'] }}/{{ $selectedIds->count() }} busy</span>
-              <span class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</span>
-            </button>
+            <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0" @if ($cell['selected']) data-selected="1" @endif>
+              @csrf
+              <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
+              @if ($filtered)
+                @foreach ($selectedIds as $id)
+                  <input type="hidden" name="users[]" value="{{ $id }}">
+                @endforeach
+              @endif
+              <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
+                aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}" aria-label="{{ $cell['date']->format('F j') }} ">
+                <span class="cal-daynum">{{ $cell['date']->day }}</span>
+                <span class="cell-count">{{ $cell['busyCount'] }}/{{ $selectedIds->count() }} busy</span>
+                <span class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</span>
+              </button>
             </form>
           @else
             <div class="cal-empty" aria-hidden="true"></div>
