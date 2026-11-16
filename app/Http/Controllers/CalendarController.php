@@ -152,12 +152,25 @@ class CalendarController extends Controller
 
         // filtering
         $memberIds = $members->pluck('user_id');
-
         $selectedIds = $this->selectedUserIds($request, $memberIds);
+
+
+        $request->validate([
+            'date' => 'nullable|date_format:Y-m-d|after:1969-12-31|before:2101-01-01',
+        ]);
+        $selectedDate = $request->filled('date')
+            ? Carbon::createFromFormat('Y-m-d', $request->input('date'))->startOfDay()
+            : null;
+
+
 
 
         $year = $request->integer('year', now()->year);
         $month = $request->integer('month', now()->month);
+        if ($selectedDate) {
+            $year = $selectedDate->year;
+            $month = $selectedDate->month;
+        }
         if ($month < 1 || $month > 12 || $year < 1970 || $year > 2100) {
             $year = now()->year;
             $month = now()->month;
@@ -175,23 +188,47 @@ class CalendarController extends Controller
 
         $cells = [];
         foreach ($period as $day) {
-            $busy = $busyByDate->get($day->format('Y-m-d'), collect());
-
+            $all = $busyByDate->get($day->format('Y-m-d'), collect());
+            $busy = $all->whereIn('user_id', $selectedIds);
             $cells[] = [
                 'date' => $day,
                 'inMonth' => $day->month === $month,
-                'meBusy' => $busy->contains('user_id', $user->id),
+                'selected' => $selectedDate !== null && $day->isSameDay($selectedDate),
+                'meBusy' => $all->contains('user_id', $user->id),
                 'busyCount' => $busy->count(),
                 'status' => self::statusFor($busy->count(), $selectedIds->count()),
             ];
         }
 
 
+        // ai code
+        $dayDetails = null;
+        if ($selectedDate) {
+            $busyIds = $busyByDate->get($selectedDate->format('Y-m-d'), collect())->pluck('user_id');
+
+            $dayDetails = $members
+                ->filter(fn($m) => $selectedIds->contains($m->user_id))
+                ->map(fn($m) => [
+                    'username' => $m->user->username,
+                    'busy' => $busyIds->contains($m->user_id),
+                ])
+                ->sortBy('busy')
+                ->values();
+        }
+        if ($request->expectsJson() && $selectedDate) {
+            return response()->json([
+                'date' => $selectedDate->toDateString(),
+                'members' => $dayDetails,
+            ]);
+        }
+
         return view('calendar', [
             'group' => $group,
             'membership' => $membership,
             'members' => $members,
             'selectedIds' => $selectedIds,
+            'selectedDate' => $selectedDate,
+            'dayDetails' => $dayDetails,
             'cells' => $cells,
             'first' => $first,
             'prev' => $prev,

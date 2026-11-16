@@ -40,7 +40,7 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $credentials['email'])->first();
         if ($user == null) {
-            return back()->withErrors(['invalid email' => 'user does not exist']);
+            return back()->withErrors(['email' => 'invalid email or password']);
         }
         if ($user->locked_until && $user->locked_until->isFuture()) {
             return back()->withErrors(['locked_until' => 'Account is locked. Check your email for an unlock link, or reset your password.']);

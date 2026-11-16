@@ -46,7 +46,9 @@
       color: #111827;
     }
 
-    .calendar-cell:hover { filter: brightness(0.96); }
+    .calendar-cell:hover {
+      filter: brightness(0.96);
+    }
 
     .calendar-cell:focus-visible {
       outline: 3px solid #0d6efd;
@@ -74,10 +76,22 @@
       color: #842029;
     }
 
+    .calendar-cell.is-selected {
+      box-shadow: inset 0 0 0 3px #0d6efd;
+    }
+
     /* Group availability colours */
-    .status-allFree { background: #bbf7d0; }
-    .status-half    { background: #fef08a; }
-    .status-allBusy { background: #fecaca; }
+    .status-allFree {
+      background: #bbf7d0;
+    }
+
+    .status-half {
+      background: #fef08a;
+    }
+
+    .status-allBusy {
+      background: #fecaca;
+    }
 
     .legend-swatch {
       display: inline-block;
@@ -104,17 +118,29 @@
 
       <div class="d-flex align-items-center gap-2">
         {{-- Week 7: search goes here. Week 10: Create Event. --}}
-
+        <form method="GET" action="/group/{{ $group->id }}/calendar" class="d-flex gap-1" role="search">
+          @if ($filtered)
+            @foreach ($selectedIds as $id)
+              <input type="hidden" name="users[]" value="{{ $id }}">
+            @endforeach
+          @endif
+          <label for="date-search" class="visually-hidden">Go to date</label>
+          <input type="date" id="date-search" name="date" class="form-control"
+            value="{{ $selectedDate?->format('Y-m-d') }}" required>
+          <button type="submit" class="btn btn-outline-secondary">Go</button>
+        </form>
         <div class="dropdown">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            data-bs-auto-close="outside" aria-expanded="false">
             Filter users{{ $filtered ? ' (' . $selectedIds->count() . ')' : '' }}
           </button>
           <div class="dropdown-menu dropdown-menu-end p-3" style="min-width: 240px;">
             <form method="GET" action="/group/{{ $group->id }}/calendar">
               <input type="hidden" name="year" value="{{ $first->year }}">
               <input type="hidden" name="month" value="{{ $first->month }}">
-
+              @if ($selectedDate)
+                <input type="hidden" name="date" value="{{ $selectedDate->format('Y-m-d') }}">
+              @endif
               <div class="fw-semibold small mb-2">Filter by user</div>
               @foreach ($members as $m)
                 <div class="form-check">
@@ -128,7 +154,8 @@
 
               <div class="d-flex gap-2 mt-3">
                 <a class="btn btn-outline-secondary btn-sm flex-fill"
-                  href="/group/{{ $group->id }}/calendar?year={{ $first->year }}&month={{ $first->month }}">Show everyone</a>
+                  href="/group/{{ $group->id }}/calendar?year={{ $first->year }}&month={{ $first->month }}">Show
+                  everyone</a>
                 <button type="submit" class="btn btn-primary btn-sm flex-fill">Apply</button>
               </div>
             </form>
@@ -136,37 +163,37 @@
         </div>
 
         <a class="btn btn-outline-secondary icon-btn" aria-label="Previous month"
-          href="{{ request()->fullUrlWithQuery(['year' => $prev->year, 'month' => $prev->month]) }}">&lsaquo;</a>
+          href="{{ request()->fullUrlWithQuery(['year' => $prev->year, 'month' => $prev->month, 'date' => null]) }}">&lsaquo;</a>
         <a class="btn btn-outline-secondary icon-btn" aria-label="Next month"
-          href="{{ request()->fullUrlWithQuery(['year' => $next->year, 'month' => $next->month]) }}">&rsaquo;</a>
+          href="{{ request()->fullUrlWithQuery(['year' => $next->year, 'month' => $next->month, 'date' => null]) }}">&rsaquo;</a>
         <a class="btn btn-outline-secondary icon-btn" aria-label="Group settings"
           href="/group/{{ $group->id }}">&#9776;</a>
       </div>
     </div>
-
+    @error('date')
+      <div class="text-danger small mb-3">{{ $message }}</div>
+    @enderror
     <div class="cal-card">
       <div class="cal-grid">
         @foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $dayName)
           <div class="cal-dayname">{{ $dayName }}</div>
         @endforeach
-
         @foreach ($cells as $cell)
           @if ($cell['inMonth'])
-            <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0">
-              @csrf
-              <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
-              @if ($filtered)
-                @foreach ($selectedIds as $id)
-                  <input type="hidden" name="users[]" value="{{ $id }}">
-                @endforeach
-              @endif
-              <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
-                aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}"
-                aria-label="{{ $cell['date']->format('F j') }}">
-                <span class="cal-daynum">{{ $cell['date']->day }}</span>
-                <span class="cell-count">{{ $cell['busyCount'] }}/{{ $selectedIds->count() }} busy</span>
-                <span class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</span>
-              </button>
+            <form action="/group/{{ $group->id }}/availability" method="POST" class="availability-toggle m-0" @if ($cell['selected']) data-selected="1" @endif></form>>
+            @csrf
+            <input type="hidden" name="date" value="{{ $cell['date']->format('Y-m-d') }}">
+            @if ($filtered)
+              @foreach ($selectedIds as $id)
+                <input type="hidden" name="users[]" value="{{ $id }}">
+              @endforeach
+            @endif
+            <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
+              aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}" aria-label="{{ $cell['date']->format('F j') }}">
+              <span class="cal-daynum">{{ $cell['date']->day }}</span>
+              <span class="cell-count">{{ $cell['busyCount'] }}/{{ $selectedIds->count() }} busy</span>
+              <span class="cell-status">{{ $cell['meBusy'] ? "You're busy" : '' }}</span>
+            </button>
             </form>
           @else
             <div class="cal-empty" aria-hidden="true"></div>
@@ -180,6 +207,26 @@
       <span><span class="legend-swatch status-half me-2"></span>Some {{ $who }} busy</span>
       <span><span class="legend-swatch status-allBusy me-2"></span>All {{ $who }} busy</span>
     </div>
+    @if ($dayDetails)
+      <div class="card mt-4 mx-auto" style="max-width: 420px;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="h6 fw-bold mb-0">{{ $selectedDate->format('l, F j') }}</h2>
+            <a href="{{ request()->fullUrlWithQuery(['date' => null]) }}" class="small">Close</a>
+          </div>
+          <ul class="list-group list-group-flush">
+            @foreach ($dayDetails as $person)
+              <li class="list-group-item d-flex justify-content-between px-0">
+                {{ $person['username'] }}
+                <span class="badge {{ $person['busy'] ? 'text-bg-danger' : 'text-bg-success' }}">
+                  {{ $person['busy'] ? 'Busy' : 'Free' }}
+                </span>
+              </li>
+            @endforeach
+          </ul>
+        </div>
+      </div>
+    @endif
   </div>
 
   <script>
@@ -208,6 +255,7 @@
           button.querySelector('.cell-count').textContent = `${data.busyCount}/${data.memberCount} busy`;
           button.querySelector('.cell-status').textContent = data.busy ? "You're busy" : '';
           button.setAttribute('aria-pressed', data.busy);
+          if (form.dataset.selected) location.reload();
         } catch (error) {
           location.reload(); // something went wrong: reload to show the real state
         } finally {
