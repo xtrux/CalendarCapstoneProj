@@ -24,9 +24,9 @@ class CalendarTest extends TestCase
 
     private function calendarUrl(int $groupId, array $query = []): string
     {
-        $url = '/group/'.$groupId.'/calendar';
+        $url = '/group/' . $groupId . '/calendar';
 
-        return $query ? $url.'?'.http_build_query($query) : $url;
+        return $query ? $url . '?' . http_build_query($query) : $url;
     }
 
     public function test_member_sees_requested_month(): void
@@ -93,8 +93,8 @@ class CalendarTest extends TestCase
 
         $this->actingAs($admin)
             ->get($this->calendarUrl($group->id, ['year' => 2026, 'month' => 12]))
-            ->assertViewHas('next', fn ($next) => $next->year === 2027 && $next->month === 1)
-            ->assertSee('year=2027&month=1', false);
+            ->assertViewHas('next', fn($next) => $next->year === 2027 && $next->month === 1)
+            ->assertSee('year=2027&month=1');
     }
 
     public function test_previous_month_rolls_back_into_previous_year(): void
@@ -104,8 +104,8 @@ class CalendarTest extends TestCase
 
         $this->actingAs($admin)
             ->get($this->calendarUrl($group->id, ['year' => 2026, 'month' => 1]))
-            ->assertViewHas('prev', fn ($prev) => $prev->year === 2025 && $prev->month === 12)
-            ->assertSee('year=2025&month=12', false);
+            ->assertViewHas('prev', fn($prev) => $prev->year === 2025 && $prev->month === 12)
+            ->assertSee('year=2025&month=12');
     }
 
     public function test_non_member_cannot_view_calendar(): void

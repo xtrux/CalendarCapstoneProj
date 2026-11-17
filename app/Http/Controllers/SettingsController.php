@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -105,17 +105,21 @@ class SettingsController extends Controller
 
         return redirect('/settings')->with('success', 'Profile Picture Updated!');
     }
-    public function changeTheme(Request $request): RedirectResponse
+    public function changeTheme(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'theme' => 'required|in:light,dark',
         ]);
 
         $user = auth()->user();
-        $user->theme_preference = $validated['theme']; 
+        $user->theme_preference = $validated['theme'];
         $user->save();
 
-       
+
+
+        if ($request->expectsJson()) {
+            return response()->json(['theme' => $user->theme_preference]);
+        }
 
         return back();
     }

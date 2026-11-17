@@ -63,7 +63,11 @@ class CalendarController extends Controller
         $validated = $request->validate([
             'date' => 'required|date_format:Y-m-d',
         ]);
-        $existing = Availability::where('group_id', $group->id)->where('user_id', $user->id)->where('date', $validated['date'])->first();
+        $existing = Availability::where('group_id', $group->id)
+            ->where('user_id', $user->id)
+            ->whereDate('date', $validated['date'])
+            ->first();
+        // $existing = Availability::where('group_id', $group->id)->where('user_id', $user->id)->where('date', $validated['date'])->first();
 
         if ($existing) {
             $existing->delete();
@@ -80,7 +84,7 @@ class CalendarController extends Controller
 
         if ($request->expectsJson()) {
             $busyCount = Availability::where('group_id', $group->id)
-                ->where('date', $validated['date'])
+                ->whereDate('date', $validated['date'])
                 ->whereIn('user_id', $selectedIds)
                 ->count();
 
@@ -99,7 +103,7 @@ class CalendarController extends Controller
             'month' => $date->month,
             'users' => $request->input('users', []),
         ]));
-        
+
     }
     public static function statusFor(int $busyCount, int $memberCount): string
     {
@@ -167,7 +171,9 @@ class CalendarController extends Controller
 
         $busyByDate = Availability::where('group_id', $group->id)
             ->whereBetween('date', [$period->getStartDate()->toDateString(), $period->getEndDate()->toDateString()])
-            ->whereIn('user_id', $selectedIds)->get()
+            // ->whereIn('user_id', $selectedIds)->get()
+            ->get()
+
             ->groupBy(fn($row) => $row->date->format('Y-m-d'));
 
         $cells = [];

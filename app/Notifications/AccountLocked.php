@@ -1,66 +1,31 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Notifications;
 
-use App\Models\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\View\View;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 
-class PasswordResetController extends Controller
+class AccountLocked extends Notification
 {
-    public function showRequestForm(): View
+    public function via(object $notifiable): array
     {
-        return view('forgot-password');
+        return ['mail'];
     }
 
-    public function sendResetLink(Request $request): RedirectResponse
+    public function toMail(object $notifiable): MailMessage
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
-        Password::sendResetLink($request->only('email'));
-
-        // Same message whether or not the email has an account, so this form
-        // can't be used to find out who is registered.
-        return back()->with('success', 'If that email has an account, a reset link is on its way.');
-    }
-
-    public function showResetForm(Request $request, string $token): View
-    {
-        return view('reset-password', [
-            'token' => $token,
-            'email' => $request->query('email'),
-        ]);
-    }
-
-    public function resetPassword(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|regex:/[A-Z]/|confirmed',
-        ]);
-
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
-                // forceFill because these columns aren't in User's #[Fillable] list.
-                // Resetting the password also clears any lockout.
-                $user->forceFill([
-                    'password' => $password, // hashed by the model's 'hashed' cast
-                    'failed_login_attempts' => 0,
-                    'locked_until' => null,
-                ])->save();
-            }
+        $url = URL::temporarySignedRoute(
+            'account.unlock',
+            now()->addMinutes(60),
+            ['user' => $notifiable->id]
         );
 
-        if ($status === Password::PasswordReset) {
-            return redirect('/login')->with('success', 'Your password has been reset. You can log in now.');
-        }
-
-        return back()->withErrors(['email' => __($status)]);
+        return (new MailMessage)
+            ->subject('Your Calendar App account has been locked')
+            ->line('Your account was locked after 5 failed login attempts.')
+            ->action('Unlock my account', $url)
+            ->line('This link expires in 60 minutes.')
+            ->line("If these attempts weren't you, change your password after unlocking.");
     }
 }

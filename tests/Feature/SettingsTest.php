@@ -119,7 +119,7 @@ class SettingsTest extends TestCase
             'oldPass' => 'WrongPassword1',
             'newPass' => 'NewPassword123',
             'newPass_confirmation' => 'NewPassword123',
-        ])->assertSessionHasErrors('password');
+        ])->assertSessionHasErrors('oldPass');
 
         $this->assertTrue(Hash::check(self::PASSWORD, $user->fresh()->password));
     }

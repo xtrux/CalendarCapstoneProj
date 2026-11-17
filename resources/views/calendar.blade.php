@@ -93,12 +93,14 @@
       background: #fecaca;
     }
 
+
+
     .legend-swatch {
       display: inline-block;
       width: 28px;
       height: 28px;
       border-radius: 4px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--bs-border-color);
       vertical-align: middle;
     }
 
@@ -188,7 +190,8 @@
                   <input type="hidden" name="users[]" value="{{ $id }}">
                 @endforeach
               @endif
-              <button type="submit" class="calendar-cell status-{{ $cell['status'] }}"
+              <button type="submit"
+                class="calendar-cell status-{{ $cell['status'] }} {{ $cell['selected'] ? 'is-selected' : '' }}"
                 aria-pressed="{{ $cell['meBusy'] ? 'true' : 'false' }}" aria-label="{{ $cell['date']->format('F j') }} ">
                 <span class="cal-daynum">{{ $cell['date']->day }}</span>
                 <span class="cell-count">{{ $cell['busyCount'] }}/{{ $selectedIds->count() }} busy</span>
